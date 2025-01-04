@@ -35,7 +35,7 @@ export default function SignUpForm() {
       withSubmit
       header={
         <p className="text-2xl text-center font-semibold">
-          Sign Up To Your Account
+          Create Your Account
         </p>
       }
       footer={
@@ -53,21 +53,17 @@ export default function SignUpForm() {
       formProps={{
         className: "grid grid-cols-2 gap-2 items-center",
       }}
-      fieldProps={{
-        first_name: {
-          className: "col-span-1",
-        },
-        last_name: {
-          className: "col-span-1",
-        },
+      fieldsProps={{
         email: {
-          className: "col-span-2",
+          itemClassName: "col-span-2",
         },
         password: {
-          className: "col-span-1",
+          typeOverride: "password",
+          inputProps: { autoComplete: "new-password" },
         },
         confirm_password: {
-          className: "col-span-1",
+          typeOverride: "password",
+          inputProps: { autoComplete: "new-password" },
         },
       }}
     />

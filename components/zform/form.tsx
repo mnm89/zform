@@ -8,11 +8,11 @@ import {
 } from "react-hook-form";
 import { z } from "zod";
 import { ZFormProvider } from "./context";
-import { Form } from "../ui/form";
-import { Button } from "../ui/button";
+import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getDefaultValues, parseSchema, ZodObjectOrWrapped } from "./parser";
-import { ZFormField } from "./form-field";
+import { FieldProps, ZFormField } from "./form-field";
 
 interface ZFormBaseProps<TSchema extends ZodObjectOrWrapped> {
   schema: TSchema;
@@ -37,10 +37,8 @@ interface ZFormComponentsProps {
 export interface ZFormProps<TSchema extends ZodObjectOrWrapped>
   extends ZFormBaseProps<TSchema>,
     ZFormComponentsProps {
-  fieldProps?: {
-    [K in keyof z.infer<TSchema>]?: {
-      className?: string;
-    };
+  fieldsProps?: {
+    [K in keyof z.infer<TSchema>]?: FieldProps;
   };
 }
 export function ZForm<TSchema extends ZodObjectOrWrapped>({
@@ -52,7 +50,7 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
   withReset = false,
   onFormInit = () => {},
   formProps = {},
-  fieldProps = {},
+  fieldsProps = {},
   submitProps = {},
   resetProps = {},
   header,
@@ -92,7 +90,7 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
                 key={`field-${index}-${field.key}`}
                 field={field}
                 path={[field.key]}
-                props={fieldProps?.[field.key]}
+                props={fieldsProps?.[field.key]}
               />
             ))}
 
