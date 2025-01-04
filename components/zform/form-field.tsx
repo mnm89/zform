@@ -18,16 +18,21 @@ import { Input } from "../ui/input";
 
 export const FieldComponent: React.FC<{
   field: ParsedField;
-  path: string[];
-}> = ({ field, path }) => {
+}> = ({ field }) => {
+  const { register } = useFormContext();
   const { id, name } = useFormField();
   const { type, key, required } = field;
 
-  if (field.type === "array") return <ArrayField field={field} path={path} />;
-  if (field.type === "object") return <ObjectField field={field} path={path} />;
-  // fallback to input ... here we should add more components depending on the field type
   return (
-    <Input key={key} type={type} name={name} required={required} id={id} />
+    <Input
+      //value={value}
+      key={key}
+      type={type}
+      required={required}
+      id={id}
+      //onChange={(e) => setValue(name, e.target.value)}
+      {...register(name)}
+    />
   );
 };
 
@@ -40,6 +45,8 @@ export const ZFormField: React.FC<{
   const label = getLabel(field);
   const description = getDescriptions(field);
 
+  if (field.type === "array") return <ArrayField field={field} path={path} />;
+  if (field.type === "object") return <ObjectField field={field} path={path} />;
   return (
     <FormField
       name={field.key}
@@ -48,7 +55,7 @@ export const ZFormField: React.FC<{
         <FormItem {...props}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <FieldComponent field={field} path={path} />
+            <FieldComponent field={field} />
           </FormControl>
           <FormDescription>{description}</FormDescription>
           <FormMessage />

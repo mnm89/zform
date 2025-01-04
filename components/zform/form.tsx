@@ -5,7 +5,6 @@ import {
   DefaultValues,
   UseFormReturn,
   SubmitHandler,
-  SubmitErrorHandler,
 } from "react-hook-form";
 import { z } from "zod";
 import { ZFormProvider } from "./context";
@@ -19,7 +18,6 @@ interface ZFormBaseProps<TSchema extends ZodObjectOrWrapped> {
   schema: TSchema;
   defaultValues?: DefaultValues<z.infer<TSchema>>;
   onSubmit?: SubmitHandler<z.infer<TSchema>>;
-  onSubmitError?: SubmitErrorHandler<z.infer<TSchema>>;
   onFormInit?: (
     form: UseFormReturn<z.infer<TSchema>, unknown, undefined>
   ) => void;
@@ -29,7 +27,6 @@ interface ZFormComponentsProps {
   formProps?: Omit<React.ComponentProps<"form">, "onSubmit">;
   submitProps?: Omit<React.ComponentProps<typeof Button>, "type" | "asChild">;
   resetProps?: Omit<React.ComponentProps<typeof Button>, "type" | "asChild">;
-
   children?: ReactNode;
   header?: ReactNode;
   footer?: ReactNode;
@@ -47,10 +44,9 @@ export interface ZFormProps<TSchema extends ZodObjectOrWrapped>
   };
 }
 export function ZForm<TSchema extends ZodObjectOrWrapped>({
-  schema,
+  schema: inputSchema,
   defaultValues,
   children,
-  onSubmitError = () => {},
   onSubmit = () => {},
   withSubmit = false,
   withReset = false,
@@ -62,13 +58,13 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
   header,
   footer,
 }: ZFormProps<TSchema>) {
+  const { fields, schema } = parseSchema(inputSchema);
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues:
       defaultValues ||
       (getDefaultValues(schema) as DefaultValues<z.infer<TSchema>>),
   });
-  const parsedSchema = parseSchema(schema);
 
   useEffect(() => {
     if (onFormInit) {
@@ -80,17 +76,18 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
     <Form {...form}>
       <ZFormProvider
         value={{
-          schema: parsedSchema,
+          fields,
+          schema,
         }}
       >
         <div className="flex flex-col gap-4 max-w-screen-sm w-full">
           {header}
           <form
             noValidate
-            onSubmit={form.handleSubmit(onSubmit, onSubmitError)}
+            onSubmit={form.handleSubmit(onSubmit)}
             {...formProps}
           >
-            {parsedSchema.fields.map((field, index) => (
+            {fields.map((field, index) => (
               <ZFormField
                 key={`field-${index}-${field.key}`}
                 field={field}

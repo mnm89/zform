@@ -13,7 +13,6 @@ export interface ParsedField {
   required: boolean;
   default?: unknown;
   description?: string;
-  fieldConfig?: Record<string, unknown>;
 
   // Field-specific
   options?: [string, string][]; // [value, label] for enums
@@ -22,6 +21,7 @@ export interface ParsedField {
 
 export interface ParsedSchema {
   fields: ParsedField[];
+  schema: ZodObjectOrWrapped;
 }
 
 function beautifyLabel(label: string) {
@@ -154,5 +154,28 @@ export function parseSchema(schema: ZodObjectOrWrapped): ParsedSchema {
     parseField(key, field as z.ZodTypeAny)
   );
 
-  return { fields };
+  return { fields, schema: createEnhancedSchema(shape) };
+}
+
+// Utility function to automatically apply the empty string to undefined transformation
+function createEnhancedSchema(
+  shape: Record<string, z.ZodTypeAny>
+): ZodObjectOrWrapped {
+  const enhancedShape: Record<string, z.ZodTypeAny> = {};
+  Object.keys(shape).forEach((key) => {
+    const field = shape[key];
+
+    // If the field is a string, apply the transformation
+    if (field instanceof z.ZodString) {
+      const message =
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (field._def as any)["required_error"] || "This field is required";
+      enhancedShape[key] = field
+        .transform((val) => (val === "" ? undefined : val)) // Transform empty string to undefined
+        .refine((val) => val !== undefined, { message }); // Required check
+    }
+  });
+
+  // Return the schema with transformations applied
+  return z.object(enhancedShape);
 }

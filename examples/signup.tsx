@@ -31,6 +31,7 @@ export default function SignUpForm() {
   return (
     <ZForm
       schema={mySchema}
+      onSubmit={(data) => console.log(data)}
       withSubmit
       header={
         <p className="text-2xl text-center font-semibold">

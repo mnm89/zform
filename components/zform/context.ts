@@ -1,9 +1,7 @@
 import { createContext, useContext } from "react";
 import { ParsedSchema } from "./parser";
 
-export interface ZContextType {
-  schema: ParsedSchema;
-}
+export type ZContextType = ParsedSchema;
 const ZFormContext = createContext<ZContextType | null>(null);
 
 export const ZFormProvider = ZFormContext.Provider;
