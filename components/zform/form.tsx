@@ -14,33 +14,39 @@ import { Button } from "../ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getDefaultValues, parseSchema, ZodObjectOrWrapped } from "./parser";
 import { ZFormField } from "./form-field";
-import { cn } from "@/lib/utils";
 
-interface ZFormBaseProps {
-  schema: ZodObjectOrWrapped;
-  defaultValues?: DefaultValues<ZodObjectOrWrapped>;
-
-  onSubmit?: SubmitHandler<z.infer<ZodObjectOrWrapped>>;
-  onSubmitError?: SubmitErrorHandler<z.infer<ZodObjectOrWrapped>>;
+interface ZFormBaseProps<TSchema extends ZodObjectOrWrapped> {
+  schema: TSchema;
+  defaultValues?: DefaultValues<z.infer<TSchema>>;
+  onSubmit?: SubmitHandler<z.infer<TSchema>>;
+  onSubmitError?: SubmitErrorHandler<z.infer<TSchema>>;
   onFormInit?: (
-    form: UseFormReturn<z.infer<ZodObjectOrWrapped>, unknown, undefined>
+    form: UseFormReturn<z.infer<TSchema>, unknown, undefined>
   ) => void;
 }
 
 interface ZFormComponentsProps {
+  formProps?: Omit<React.ComponentProps<"form">, "onSubmit">;
+  submitProps?: Omit<React.ComponentProps<typeof Button>, "type" | "asChild">;
+  resetProps?: Omit<React.ComponentProps<typeof Button>, "type" | "asChild">;
+
   children?: ReactNode;
   header?: ReactNode;
   footer?: ReactNode;
-}
-
-export interface ZFormProps extends ZFormBaseProps, ZFormComponentsProps {
-  formProps?: Omit<React.ComponentProps<"form">, "onSubmit">;
   withSubmit?: boolean;
   withReset?: boolean;
-  submitProps?: Omit<React.ComponentProps<typeof Button>, "type" | "asChild">;
-  resetProps?: Omit<React.ComponentProps<typeof Button>, "type" | "asChild">;
 }
-export function ZForm({
+
+export interface ZFormProps<TSchema extends ZodObjectOrWrapped>
+  extends ZFormBaseProps<TSchema>,
+    ZFormComponentsProps {
+  fieldProps?: {
+    [K in keyof z.infer<TSchema>]?: {
+      className?: string;
+    };
+  };
+}
+export function ZForm<TSchema extends ZodObjectOrWrapped>({
   schema,
   defaultValues,
   children,
@@ -50,17 +56,19 @@ export function ZForm({
   withReset = false,
   onFormInit = () => {},
   formProps = {},
+  fieldProps = {},
   submitProps = {},
   resetProps = {},
   header,
   footer,
-}: ZFormProps) {
+}: ZFormProps<TSchema>) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: defaultValues || getDefaultValues(schema),
+    defaultValues:
+      defaultValues ||
+      (getDefaultValues(schema) as DefaultValues<z.infer<TSchema>>),
   });
   const parsedSchema = parseSchema(schema);
-  const { className, ...otherFormProps } = formProps;
 
   useEffect(() => {
     if (onFormInit) {
@@ -75,40 +83,43 @@ export function ZForm({
           schema: parsedSchema,
         }}
       >
-        {header}
-        <form
-          noValidate
-          onSubmit={form.handleSubmit(onSubmit, onSubmitError)}
-          className={cn("max-w-screen-sm w-full", className)}
-          {...otherFormProps}
-        >
-          {parsedSchema.fields.map((field, index) => (
-            <ZFormField
-              key={`field-${index}-${field.key}`}
-              field={field}
-              path={[field.key]}
-            />
-          ))}
+        <div className="flex flex-col gap-4 max-w-screen-sm w-full">
+          {header}
+          <form
+            noValidate
+            onSubmit={form.handleSubmit(onSubmit, onSubmitError)}
+            {...formProps}
+          >
+            {parsedSchema.fields.map((field, index) => (
+              <ZFormField
+                key={`field-${index}-${field.key}`}
+                field={field}
+                path={[field.key]}
+                props={fieldProps?.[field.key]}
+              />
+            ))}
 
-          {children}
-          {withReset && (
-            <Button
-              type="button"
-              {...resetProps}
-              onClick={() =>
-                form.reset(defaultValues || getDefaultValues(schema))
-              }
-            >
-              Reset
-            </Button>
-          )}
-          {withSubmit && (
-            <Button type="submit" {...submitProps}>
-              Submit
-            </Button>
-          )}
-        </form>
-        {footer}
+            {children}
+
+            {withReset && (
+              <Button
+                type="button"
+                {...resetProps}
+                onClick={() =>
+                  form.reset(defaultValues || getDefaultValues(schema))
+                }
+              >
+                Reset
+              </Button>
+            )}
+            {withSubmit && (
+              <Button type="submit" {...submitProps}>
+                Submit
+              </Button>
+            )}
+          </form>
+          {footer}
+        </div>
       </ZFormProvider>
     </Form>
   );

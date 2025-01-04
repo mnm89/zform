@@ -21,17 +21,38 @@ export default function DemoForm() {
       schema={mySchema}
       withSubmit
       withReset
-      header={<p className="text-2xl font-semibold">Correspondence Address</p>}
+      header={
+        <p className="text-2xl text-center font-semibold">
+          Correspondence Address
+        </p>
+      }
       footer={
         <p className="text-muted-foreground flex gap-2">
           <AlertTriangle />
           You confirm all the provided information are real and not fake
         </p>
       }
-      submitProps={{ variant: "default" }}
       resetProps={{ variant: "outline", className: "col-start-1" }}
+      submitProps={{ variant: "default" }}
       formProps={{
         className: "grid grid-cols-2 gap-2 items-center",
+      }}
+      fieldProps={{
+        address: {
+          className: "col-span-2",
+        },
+        city: {
+          className: "col-span-2",
+        },
+        zip_code: {
+          className: "col-span-1",
+        },
+        country: {
+          className: "col-span-1",
+        },
+        personal_email: {
+          className: "col-span-2",
+        },
       }}
     />
   );

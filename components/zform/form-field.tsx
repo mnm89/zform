@@ -34,7 +34,8 @@ export const FieldComponent: React.FC<{
 export const ZFormField: React.FC<{
   field: ParsedField;
   path: string[];
-}> = ({ field, path }) => {
+  props?: { className?: string };
+}> = ({ field, path, props }) => {
   const { control } = useFormContext();
   const label = getLabel(field);
   const description = getDescriptions(field);
@@ -44,7 +45,7 @@ export const ZFormField: React.FC<{
       name={field.key}
       control={control}
       render={() => (
-        <FormItem>
+        <FormItem {...props}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <FieldComponent field={field} path={path} />
