@@ -1,11 +1,5 @@
 import { DefaultValues } from "react-hook-form";
-import {
-  RawCreateParams,
-  UnknownKeysParam,
-  z,
-  ZodRawShape,
-  ZodTypeAny,
-} from "zod";
+import { UnknownKeysParam, z, ZodRawShape, ZodTypeAny } from "zod";
 //import { getFieldConfigInZodStack } from "./field-config";
 
 export type ZodObjectOrWrapped<
@@ -80,6 +74,7 @@ function parseField(key: string, schema: z.ZodTypeAny): ParsedField {
   //const fieldConfig = getFieldConfigInZodStack(schema);
   const type = inferFieldType(baseSchema);
   const defaultValue = getDefaultValueInZodStack(schema);
+  let options: [string, string][] = [];
 
   // Arrays and objects
   let subSchema: ParsedField[] = [];
@@ -91,7 +86,18 @@ function parseField(key: string, schema: z.ZodTypeAny): ParsedField {
   if (baseSchema instanceof z.ZodArray) {
     subSchema = [parseField("0", baseSchema._def.type)];
   }
-
+  if (baseSchema instanceof z.ZodNativeEnum) {
+    options = Object.values<string>(baseSchema._def.values).map((v) => [
+      v,
+      beautifyLabel(v),
+    ]);
+  }
+  if (baseSchema instanceof z.ZodEnum) {
+    options = (baseSchema._def.values as string[]).map((v) => [
+      v,
+      beautifyLabel(v),
+    ]);
+  }
   return {
     key,
     type,
@@ -99,6 +105,7 @@ function parseField(key: string, schema: z.ZodTypeAny): ParsedField {
     default: defaultValue,
     description: baseSchema.description,
     schema: subSchema,
+    options,
   };
 }
 
@@ -161,8 +168,9 @@ function createEnhancedSchemaShape(
 
       if (!isOptional) {
         const message =
-          (field._def as RawCreateParams)?.["required_error"] ||
-          "This field is required";
+          "required_error" in field._def
+            ? (field._def.required_error as string)
+            : "This field is required";
         enhancedShape[key] = enhancedShape[key].refine(
           (val) => val !== undefined,
           { message }

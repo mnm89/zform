@@ -2,6 +2,13 @@
 import ZForm from "@/components/zform";
 import { z } from "zod";
 
+enum Subject {
+  GeneralInquiry = "General Inquiry",
+  Support = "Support",
+  Feedback = "Feedback",
+  Sales = "Sales",
+}
+
 const contactSchema = z.object({
   name: z
     .string({ required_error: "Name is required" })
@@ -16,7 +23,7 @@ const contactSchema = z.object({
   email: z
     .string({ required_error: "Email is required" })
     .email("Invalid email address"),
-  subject: z.string().optional(),
+  subject: z.nativeEnum(Subject).optional(),
   message: z
     .string({ required_error: "Message is required" })
     .max(1000, "Message is too long"),

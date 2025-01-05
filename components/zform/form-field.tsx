@@ -18,12 +18,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getBooleanFieldComponent } from "./components/boolean-field";
+import { getSelectFieldComponent } from "./components/select-field";
 
 export type FieldProps = {
   itemClassName?: string;
   inputProps?: React.ComponentProps<"input">;
   textareaProps?: React.ComponentProps<"textarea">;
-  typeOverride?: "password" | "switch" | "textarea";
+  typeOverride?: "password" | "switch" | "textarea" | "autoComplete";
   labelOverride?: string;
   descriptionOverride?: string;
 };
@@ -95,6 +96,28 @@ export const ZFormField: React.FC<{
               <FormDescription>{description}</FormDescription>
               <FormMessage />
             </div>
+          </FormItem>
+        )}
+      />
+    );
+  }
+
+  if (field.type === "select") {
+    const FieldComponent = getSelectFieldComponent(
+      typeOverride as "autocomplete"
+    );
+    return (
+      <FormField
+        name={field.key}
+        control={control}
+        render={() => (
+          <FormItem className={itemClassName}>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              <FieldComponent field={field} />
+            </FormControl>
+            <FormDescription>{description}</FormDescription>
+            <FormMessage />
           </FormItem>
         )}
       />
