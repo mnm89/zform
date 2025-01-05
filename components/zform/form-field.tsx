@@ -22,6 +22,7 @@ import { getBooleanFieldComponent } from "./components/boolean-field";
 export type FieldProps = {
   itemClassName?: string;
   inputProps?: React.ComponentProps<"input">;
+  textareaProps?: React.ComponentProps<"textarea">;
   typeOverride?: "password" | "switch" | "textarea";
   labelOverride?: string;
   descriptionOverride?: string;
@@ -39,6 +40,7 @@ export const ZFormField: React.FC<{
     itemClassName,
     typeOverride,
     inputProps,
+    textareaProps,
   } = props;
   const label = labelOverride || getLabel(field);
   const description = descriptionOverride || getDescriptions(field);
@@ -47,7 +49,9 @@ export const ZFormField: React.FC<{
   if (field.type === "object") return <ObjectField field={field} path={path} />;
 
   if (field.type === "string") {
-    const FieldComponent = getStringFieldComponent(typeOverride as "password");
+    const FieldComponent = getStringFieldComponent(
+      typeOverride as "password" | "textarea"
+    );
     return (
       <FormField
         name={field.key}
@@ -56,7 +60,11 @@ export const ZFormField: React.FC<{
           <FormItem className={itemClassName}>
             <FormLabel>{label}</FormLabel>
             <FormControl>
-              <FieldComponent field={field} inputProps={inputProps} />
+              <FieldComponent
+                field={field}
+                inputProps={inputProps}
+                textareaProps={textareaProps}
+              />
             </FormControl>
             <FormDescription>{description}</FormDescription>
             <FormMessage />
