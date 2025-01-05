@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormField } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import { ParsedField } from "../parser";
+import { ParsedField } from "../core/parser";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EyeIcon, EyeOffIcon } from "lucide-react";

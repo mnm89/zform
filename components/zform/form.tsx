@@ -7,11 +7,15 @@ import {
   SubmitHandler,
 } from "react-hook-form";
 import { z } from "zod";
-import { ZFormProvider } from "./context";
+import { ZFormProvider } from "./core/context";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getDefaultValues, parseSchema, ZodObjectOrWrapped } from "./parser";
+import {
+  getDefaultValues,
+  parseSchema,
+  ZodObjectOrWrapped,
+} from "./core/parser";
 import { FieldProps, ZFormField } from "./form-field";
 
 interface ZFormBaseProps<TSchema extends ZodObjectOrWrapped> {

@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { ZFormField } from "./form-field";
-import { getLabel, ParsedField } from "./parser";
+import { getLabel, ParsedField } from "./core/parser";
 interface ObjectWrapperProps {
   label: string | ReactNode;
   children: ReactNode;

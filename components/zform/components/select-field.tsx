@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ParsedField } from "../parser";
+import { ParsedField } from "../core/parser";
 import { useFormField } from "@/components/ui/form";
 
 function useSelectField(field: ParsedField) {

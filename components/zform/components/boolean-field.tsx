@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
-import { ParsedField } from "../parser";
+import { ParsedField } from "../core/parser";
 import { useFormField } from "@/components/ui/form";
 
 function useBooleanField(field: ParsedField) {

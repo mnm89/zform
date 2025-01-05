@@ -4,12 +4,20 @@ const examples = [
   {
     name: "Sign Up Form",
     path: "/examples/signup",
-    description: "A basic sign-up form with validation.",
+    description:
+      "A basic sign-up form with validation. using snake_case for schema keys",
   },
   {
     name: "Contact Form",
     path: "/examples/contact",
-    description: "A contact form with multiple fields.",
+    description:
+      "A contact form with select(native enum), boolean and string(textarea) fields",
+  },
+  {
+    name: "Newsletter Subscription",
+    path: "/examples/newsletter",
+    description:
+      "A newsletter subscription form with date and boolean(switch) fields. using camelCase for schema keys",
   },
 ];
 

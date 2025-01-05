@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import {} from "./context";
-import { getLabel, ParsedField } from "./parser";
+import {} from "./core/context";
+import { getLabel, ParsedField } from "./core/parser";
 import { ZFormField } from "./form-field";
 import { Button } from "../ui/button";
 import { PlusIcon, TrashIcon } from "lucide-react";

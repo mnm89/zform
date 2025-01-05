@@ -1,6 +1,6 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { getDescriptions, getLabel, ParsedField } from "./parser";
+import { getDescriptions, getLabel, ParsedField } from "./core/parser";
 
 import {
   FormControl,
