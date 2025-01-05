@@ -1,5 +1,5 @@
 "use client";
-import ZForm from "@/components/zform";
+import ZForm from "@/zform";
 import { z } from "zod";
 
 enum Subject {

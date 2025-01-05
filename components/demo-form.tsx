@@ -1,5 +1,5 @@
 "use client";
-import { ZForm } from "@/components/zform/form";
+import { ZForm } from "@/zform/form";
 import { AlertTriangle } from "lucide-react";
 import { z } from "zod";
 

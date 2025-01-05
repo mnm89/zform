@@ -1,5 +1,5 @@
 "use client";
-import ZForm from "@/components/zform";
+import ZForm from "@/zform";
 import Link from "next/link";
 import { z } from "zod";
 
