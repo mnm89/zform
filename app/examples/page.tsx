@@ -11,11 +11,6 @@ const examples = [
     path: "/examples/contact",
     description: "A contact form with multiple fields.",
   },
-  {
-    name: "Feedback Form",
-    path: "/examples/feedback",
-    description: "A feedback form with ratings.",
-  },
 ];
 
 export default function ExamplesIndex() {

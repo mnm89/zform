@@ -7,9 +7,11 @@ export type ZodObjectOrWrapped<
 > =
   | z.ZodObject<T, UnknownKeysParam>
   | z.ZodEffects<z.ZodObject<T, UnknownKeysParam>>;
+
+export type FieldType = ReturnType<typeof inferFieldType>;
 export interface ParsedField {
   key: string;
-  type: string;
+  type: FieldType;
   required: boolean;
   default?: unknown;
   description?: string;
@@ -56,8 +58,7 @@ function getDefaultValueInZodStack(schema: z.ZodTypeAny): unknown {
 
   return undefined;
 }
-
-function inferFieldType(schema: z.ZodTypeAny): string {
+function inferFieldType(schema: z.ZodTypeAny) {
   if (schema instanceof z.ZodObject) return "object";
   if (schema instanceof z.ZodString) return "string";
   if (schema instanceof z.ZodNumber) return "number";
