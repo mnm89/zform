@@ -14,6 +14,12 @@ const examples = [
       "A contact form with select(native enum), boolean and string(textarea) fields",
   },
   {
+    name: "Feedback Form",
+    path: "/examples/feedback",
+    description:
+      "A feedback form with number(stepper), boolean and string(textarea) fields",
+  },
+  {
     name: "Newsletter Subscription",
     path: "/examples/newsletter",
     description:

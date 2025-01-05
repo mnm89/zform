@@ -40,6 +40,7 @@ export const SelectField: React.FC<{ field: ParsedField }> = ({ field }) => {
   );
 };
 export const getSelectFieldComponent = (typeOverride?: "autocomplete") => {
-  if (typeOverride === "autocomplete") return SelectField;
+  if (typeOverride === "autocomplete")
+    throw new Error("Not implemented", { cause: { typeOverride } });
   return SelectField;
 };

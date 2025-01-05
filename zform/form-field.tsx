@@ -19,12 +19,22 @@ import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getBooleanFieldComponent } from "./components/boolean-field";
 import { getSelectFieldComponent } from "./components/select-field";
+import { getDateFieldComponent } from "./components/date-field";
+import { CalendarProps } from "@/components/ui/calendar";
+import { getNumberFieldComponent } from "./components/number-field";
 
 export type FieldProps = {
   itemClassName?: string;
   inputProps?: React.ComponentProps<"input">;
   textareaProps?: React.ComponentProps<"textarea">;
-  typeOverride?: "password" | "switch" | "textarea" | "autoComplete";
+  typeOverride?:
+    | "password"
+    | "switch"
+    | "textarea"
+    | "autocomplete"
+    | "range"
+    | "stepper";
+  calendarProps?: CalendarProps;
   labelOverride?: string;
   descriptionOverride?: string;
 };
@@ -42,6 +52,7 @@ export const ZFormField: React.FC<{
     typeOverride,
     inputProps,
     textareaProps,
+    calendarProps,
   } = props;
   const label = labelOverride || getLabel(field);
   const description = descriptionOverride || getDescriptions(field);
@@ -83,7 +94,7 @@ export const ZFormField: React.FC<{
         render={() => (
           <FormItem
             className={cn(
-              "flex flex-row items-start space-x-3 space-y-0 p-4",
+              "flex flex-row justify-start space-x-3 space-y-0",
               itemClassName
             )}
           >
@@ -115,6 +126,44 @@ export const ZFormField: React.FC<{
             <FormLabel>{label}</FormLabel>
             <FormControl>
               <FieldComponent field={field} />
+            </FormControl>
+            <FormDescription>{description}</FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    );
+  }
+  if (field.type === "date") {
+    const FieldComponent = getDateFieldComponent(typeOverride as "range");
+    return (
+      <FormField
+        name={field.key}
+        control={control}
+        render={() => (
+          <FormItem className={itemClassName}>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              <FieldComponent field={field} calendarProps={calendarProps} />
+            </FormControl>
+            <FormDescription>{description}</FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    );
+  }
+  if (field.type === "number") {
+    const FieldComponent = getNumberFieldComponent(typeOverride as "stepper");
+    return (
+      <FormField
+        name={field.key}
+        control={control}
+        render={() => (
+          <FormItem className={itemClassName}>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              <FieldComponent field={field} inputProps={inputProps} />
             </FormControl>
             <FormDescription>{description}</FormDescription>
             <FormMessage />

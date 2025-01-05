@@ -28,6 +28,7 @@ export default function NewsletterForm() {
       }
       submitProps={{
         variant: "default",
+        className: "mx-auto col-span-2 max-w-sm w-full",
       }}
       formProps={{
         className: "grid grid-cols-2 gap-2 items-center",
