@@ -1,4 +1,4 @@
-import React, { ComponentType } from "react";
+import React from "react";
 import { useFormContext } from "react-hook-form";
 import { getDescriptions, getLabel, ParsedField } from "./parser";
 
@@ -9,17 +9,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "@/components/ui/form";
 
 import { ArrayField } from "./array-field";
 import { ObjectField } from "./object-field";
-import { StringField } from "./components/string-field";
-import { PasswordField } from "./components/password-field";
+import { getStringFieldComponent } from "./components/string-field";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { getBooleanFieldComponent } from "./components/boolean-field";
 
 export type FieldProps = {
   itemClassName?: string;
   inputProps?: React.ComponentProps<"input">;
-  typeOverride?: "password";
+  typeOverride?: "password" | "switch" | "textarea";
   labelOverride?: string;
   descriptionOverride?: string;
 };
@@ -43,26 +46,58 @@ export const ZFormField: React.FC<{
   if (field.type === "array") return <ArrayField field={field} path={path} />;
   if (field.type === "object") return <ObjectField field={field} path={path} />;
 
-  let FieldComponent: ComponentType<{
-    field: ParsedField;
-    inputProps?: React.ComponentProps<"input">;
-  }> = StringField;
-  if (typeOverride === "password") FieldComponent = PasswordField;
+  if (field.type === "string") {
+    const FieldComponent = getStringFieldComponent(typeOverride as "password");
+    return (
+      <FormField
+        name={field.key}
+        control={control}
+        render={() => (
+          <FormItem className={itemClassName}>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              <FieldComponent field={field} inputProps={inputProps} />
+            </FormControl>
+            <FormDescription>{description}</FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    );
+  }
+  if (field.type === "boolean") {
+    const FieldComponent = getBooleanFieldComponent(typeOverride as "switch");
+    return (
+      <FormField
+        name={field.key}
+        control={control}
+        render={() => (
+          <FormItem
+            className={cn(
+              "flex flex-row items-start space-x-3 space-y-0 p-4",
+              itemClassName
+            )}
+          >
+            <FormControl>
+              <FieldComponent field={field} />
+            </FormControl>
+
+            <div className="space-y-1 leading-none">
+              <FormLabel>{label}</FormLabel>
+              <FormDescription>{description}</FormDescription>
+              <FormMessage />
+            </div>
+          </FormItem>
+        )}
+      />
+    );
+  }
 
   return (
-    <FormField
-      name={field.key}
-      control={control}
-      render={() => (
-        <FormItem className={itemClassName}>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <FieldComponent field={field} inputProps={inputProps} />
-          </FormControl>
-          <FormDescription>{description}</FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+    <Alert variant="destructive" className="h-full">
+      <AlertCircle className="size-4" />
+      <AlertTitle>Unhandled field type {field.type}</AlertTitle>
+      <AlertDescription> - {field.key}</AlertDescription>
+    </Alert>
   );
 };

@@ -1,5 +1,11 @@
 import { DefaultValues } from "react-hook-form";
-import { UnknownKeysParam, z, ZodRawShape, ZodTypeAny } from "zod";
+import {
+  RawCreateParams,
+  UnknownKeysParam,
+  z,
+  ZodRawShape,
+  ZodTypeAny,
+} from "zod";
 //import { getFieldConfigInZodStack } from "./field-config";
 
 export type ZodObjectOrWrapped<
@@ -75,17 +81,6 @@ function parseField(key: string, schema: z.ZodTypeAny): ParsedField {
   const type = inferFieldType(baseSchema);
   const defaultValue = getDefaultValueInZodStack(schema);
 
-  // Enums
-  const options = baseSchema._def.values;
-  let optionValues: [string, string][] = [];
-  if (options) {
-    if (!Array.isArray(options)) {
-      optionValues = Object.entries(options);
-    } else {
-      optionValues = options.map((value) => [value, value]);
-    }
-  }
-
   // Arrays and objects
   let subSchema: ParsedField[] = [];
   if (baseSchema instanceof z.ZodObject) {
@@ -103,7 +98,6 @@ function parseField(key: string, schema: z.ZodTypeAny): ParsedField {
     required: !schema.isOptional(),
     default: defaultValue,
     description: baseSchema.description,
-    options: optionValues,
     schema: subSchema,
   };
 }
@@ -145,37 +139,47 @@ export function getLabel(field: ParsedField) {
 export function getDescriptions(field: ParsedField) {
   return field.description;
 }
-export function parseSchema(schema: ZodObjectOrWrapped): ParsedSchema {
+
+function createEnhancedSchemaShape(
+  schema: ZodObjectOrWrapped
+): Record<string, z.ZodTypeAny> {
   const objectSchema =
     schema instanceof z.ZodEffects ? schema.innerType() : schema;
   const shape = objectSchema.shape;
+  const enhancedShape: Record<string, z.ZodTypeAny> = {};
+
+  Object.keys(shape).forEach((key) => {
+    const field = shape[key];
+    const isOptional = field.isOptional();
+    // If the field is a string, apply the transformation
+    if (field instanceof z.ZodString) {
+      // we apply the transformation on a string field
+      // to force the validation against the required_error
+      enhancedShape[key] = field.transform((val) =>
+        val === "" ? undefined : val
+      );
+
+      if (!isOptional) {
+        const message =
+          (field._def as RawCreateParams)?.["required_error"] ||
+          "This field is required";
+        enhancedShape[key] = enhancedShape[key].refine(
+          (val) => val !== undefined,
+          { message }
+        ) as z.ZodTypeAny;
+      }
+    } else {
+      enhancedShape[key] = field; // Leave other types untouched
+    }
+  });
+  return enhancedShape;
+}
+export function parseSchema(schema: ZodObjectOrWrapped): ParsedSchema {
+  const shape = createEnhancedSchemaShape(schema);
 
   const fields: ParsedField[] = Object.entries(shape).map(([key, field]) =>
     parseField(key, field as z.ZodTypeAny)
   );
 
-  return { fields, schema: createEnhancedSchema(shape) };
-}
-
-// Utility function to automatically apply the empty string to undefined transformation
-function createEnhancedSchema(
-  shape: Record<string, z.ZodTypeAny>
-): ZodObjectOrWrapped {
-  const enhancedShape: Record<string, z.ZodTypeAny> = {};
-  Object.keys(shape).forEach((key) => {
-    const field = shape[key];
-
-    // If the field is a string, apply the transformation
-    if (field instanceof z.ZodString) {
-      const message =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (field._def as any)["required_error"] || "This field is required";
-      enhancedShape[key] = field
-        .transform((val) => (val === "" ? undefined : val)) // Transform empty string to undefined
-        .refine((val) => val !== undefined, { message }); // Required check
-    }
-  });
-
-  // Return the schema with transformations applied
-  return z.object(enhancedShape);
+  return { fields, schema: z.object(shape) };
 }
