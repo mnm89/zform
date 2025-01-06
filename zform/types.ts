@@ -1,12 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
-import {
-  Control,
-  DefaultValues,
-  FieldValues,
-  SubmitHandler,
-  UseFormReturn,
-} from "react-hook-form";
+import { DefaultValues, SubmitHandler, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { CalendarProps } from "@/components/ui/calendar";
 import { FieldType, ParsedField, ZodObjectOrWrapped } from "./core/types";
@@ -46,7 +40,6 @@ type FieldProps = {
   descriptionOverride?: string;
 };
 export interface ZWrapperProps {
-  control: Control<FieldValues, unknown>;
   type: FieldType;
   name: string;
   label: string;

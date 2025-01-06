@@ -7,10 +7,14 @@ export const ObjectField: React.FC<{
   path: string[];
   className?: string;
   label?: string;
-}> = ({ field, path, className, label }) => {
+  description?: string;
+}> = ({ field, path, className, label, description }) => {
   return (
     <fieldset className={className}>
-      <legend className="p-2 font-semibold">{label}</legend>
+      <legend className="p-2">
+        <p className="font-semibold">{label}</p>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </legend>
       {Object.entries(field.schema!).map(([, subField]) => (
         <ZField
           key={`${path.join(".")}.${subField.key}`}

@@ -26,7 +26,8 @@ import { ParsedField } from "./core/types";
 
 export const ZWrapper: React.FC<
   ZWrapperProps & { children: React.ReactNode }
-> = ({ control, className, description, label, name, type, children }) => {
+> = ({ className, description, label, name, type, children }) => {
+  const { control } = useFormContext();
   if (type === "boolean")
     return (
       <FormField
@@ -67,14 +68,22 @@ export const ZWrapper: React.FC<
 };
 
 export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
-  const { control } = useFormContext();
   const { labelOverride, descriptionOverride, itemClassName, typeOverride } =
     props;
   const label = labelOverride || getLabel(field);
   const description = descriptionOverride || getDescriptions(field) || "";
   const name = path.join(".");
 
-  if (field.type === "array") return <ArrayField field={field} path={path} />;
+  if (field.type === "array")
+    return (
+      <ArrayField
+        field={field}
+        path={path}
+        className={itemClassName}
+        label={label}
+        description={description}
+      />
+    );
   if (field.type === "object")
     return (
       <ObjectField
@@ -82,6 +91,7 @@ export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
         path={path}
         className={itemClassName}
         label={label}
+        description={description}
       />
     );
 
@@ -98,7 +108,6 @@ export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
 
   return (
     <ZWrapper
-      control={control}
       label={label}
       description={description}
       name={name}

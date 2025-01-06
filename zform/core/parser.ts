@@ -42,7 +42,6 @@ function getDefaultValueInZodStack(schema: z.ZodTypeAny): unknown {
 
 function parseField(key: string, schema: z.ZodTypeAny): ParsedField {
   const baseSchema = getBaseSchema(schema);
-  //const fieldConfig = getFieldConfigInZodStack(schema);
   const type = inferFieldType(baseSchema);
   const defaultValue = getDefaultValueInZodStack(schema);
   let options: [string, string][] = [];
@@ -118,6 +117,91 @@ export function getDescriptions(field: ParsedField) {
   return field.description;
 }
 
+function enhanceZodString(key: string | number, field: z.ZodString) {
+  const isOptional = field.isOptional();
+  if (!isOptional) {
+    // If the field is a string, apply the refinement with the required error for falsy string values
+    const message = field._def.errorMap?.(
+      {
+        code: "invalid_type",
+        expected: "string",
+        received: "undefined",
+        path: [key],
+      },
+      { data: undefined, defaultError: "This field is required" }
+    ).message;
+    return field.refine((val) => !!val, {
+      message,
+    });
+  }
+  return field;
+}
+function enhanceZodObject(
+  key: string | number,
+  field: z.ZodObject<
+    z.ZodRawShape,
+    z.UnknownKeysParam,
+    z.ZodTypeAny,
+    z.ZodTypeAny,
+    z.ZodTypeAny
+  >
+) {
+  const isOptional = field.isOptional();
+  const enhanced = z.object(createEnhancedSchemaShape(field));
+  if (isOptional) {
+    const message = field._def.errorMap?.(
+      {
+        code: "invalid_type",
+        expected: "string",
+        received: "undefined",
+        path: [key],
+      },
+      { data: undefined, defaultError: "This field is required" }
+    ).message;
+    return enhanced.refine((val) => !!val, message);
+  }
+
+  return enhanced;
+}
+
+function enhanceZodArray(
+  key: string | number,
+  field: z.ZodArray<z.ZodTypeAny>
+) {
+  const enhancedElement = enhanceZodField(key, field.element);
+  let copy = z.array(enhancedElement);
+  // Mapping between _def keys and ZodArray methods
+  const checksMap = {
+    exactLength: "length",
+    minLength: "min",
+    maxLength: "max",
+  } as const;
+
+  // Dynamically apply the checks
+  for (const [checkKey, method] of Object.entries(checksMap)) {
+    if (field._def[checkKey as "exactLength" | "maxLength" | "minLength"]) {
+      const check =
+        field._def[checkKey as "exactLength" | "maxLength" | "minLength"]!;
+      copy = copy[method](check.value, check.message);
+    }
+  }
+  return copy;
+}
+
+function enhanceZodField(
+  key: string | number,
+  field: z.ZodTypeAny
+): z.ZodTypeAny {
+  if (field instanceof z.ZodString) {
+    return enhanceZodString(key, field);
+  } else if (field instanceof z.ZodObject) {
+    return enhanceZodObject(key, field);
+  } else if (field instanceof z.ZodArray) {
+    return enhanceZodArray(key, field);
+  }
+  return field; // Leave other types untouched
+}
+
 function createEnhancedSchemaShape(
   schema: ZodObjectOrWrapped
 ): Record<string, z.ZodTypeAny> {
@@ -128,40 +212,7 @@ function createEnhancedSchemaShape(
 
   Object.keys(shape).forEach((key) => {
     const field = shape[key];
-    const isOptional = field.isOptional();
-    if (field instanceof z.ZodString) {
-      if (!isOptional) {
-        // If the field is a string, apply the refinement with the required error for falsy string values
-        const message = field._def.errorMap?.(
-          {
-            code: "invalid_type",
-            expected: "string",
-            received: "undefined",
-            path: [key],
-          },
-          { data: undefined, defaultError: "This field is required" }
-        ).message;
-        enhancedShape[key] = field.refine((val) => !!val, {
-          message,
-        });
-      }
-    } else if (field instanceof z.ZodObject) {
-      enhancedShape[key] = z.object(createEnhancedSchemaShape(field));
-      if (!isOptional) {
-        const message = field._def.errorMap?.(
-          {
-            code: "invalid_type",
-            expected: "string",
-            received: "undefined",
-            path: [key],
-          },
-          { data: undefined, defaultError: "This field is required" }
-        ).message;
-        enhancedShape[key] = enhancedShape[key].refine((val) => !!val, message);
-      }
-    } else {
-      enhancedShape[key] = field; // Leave other types untouched
-    }
+    enhancedShape[key] = enhanceZodField(key, field);
   });
   return enhancedShape;
 }
