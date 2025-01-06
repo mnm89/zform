@@ -30,6 +30,11 @@ const examples = [
     path: "/examples/post",
     description: "A post creation form with array and object fields",
   },
+  {
+    name: "Work Experiences",
+    path: "/examples/work-experiences",
+    description: "An array of work / job experience object with date range",
+  },
 ];
 
 export default function ExamplesIndex() {

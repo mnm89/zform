@@ -43,16 +43,16 @@ export default function PostForm() {
       }}
       fieldsProps={{
         content: {
-          itemClassName: "col-span-2",
+          className: "col-span-2",
           typeOverride: "textarea",
         },
         metadata: {
-          itemClassName:
+          className:
             "col-span-2 grid grid-cols-2 gap-2 items-center border p-1",
           descriptionOverride: "Post metadata including the date and location",
         },
         tags: {
-          itemClassName:
+          className:
             "col-span-2 grid grid-cols-4 gap-2 items-center border p-1",
           descriptionOverride: "Post tags to help users find your post",
         },

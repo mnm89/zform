@@ -25,7 +25,7 @@ interface ZFormComponentsProps {
   withReset?: boolean;
 }
 type FieldProps = {
-  itemClassName?: string;
+  className?: string;
   inputProps?: React.ComponentProps<"input">;
   textareaProps?: React.ComponentProps<"textarea">;
   typeOverride?:

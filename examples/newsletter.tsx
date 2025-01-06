@@ -33,7 +33,7 @@ export default function NewsletterForm() {
       }}
       fieldsProps={{
         email: {
-          itemClassName: "col-span-2",
+          className: "col-span-2",
         },
         subscribeToNewsletter: {
           typeOverride: "switch",

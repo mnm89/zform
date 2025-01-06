@@ -40,14 +40,14 @@ export default function FeedbackForm() {
           typeOverride: "stepper",
         },
         comment: {
-          itemClassName: "col-span-2",
+          className: "col-span-2",
           typeOverride: "textarea",
           inputProps: {
             placeholder: "Add a comment (optional)",
           },
         },
         subscribe: {
-          itemClassName: "col-span-2",
+          className: "col-span-2",
           labelOverride: "Subscribe to updates",
           descriptionOverride:
             "Get notified about responses and new feedback features.",

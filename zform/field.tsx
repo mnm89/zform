@@ -68,8 +68,7 @@ export const ZWrapper: React.FC<
 };
 
 export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
-  const { labelOverride, descriptionOverride, itemClassName, typeOverride } =
-    props;
+  const { labelOverride, descriptionOverride, className, typeOverride } = props;
   const label = labelOverride || getLabel(field);
   const description = descriptionOverride || getDescriptions(field) || "";
   const name = path.join(".");
@@ -79,7 +78,7 @@ export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
       <ArrayField
         field={field}
         path={path}
-        className={itemClassName}
+        className={className}
         label={label}
         description={description}
       />
@@ -89,7 +88,7 @@ export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
       <ObjectField
         field={field}
         path={path}
-        className={itemClassName}
+        className={className}
         label={label}
         description={description}
       />
@@ -112,7 +111,7 @@ export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
       description={description}
       name={name}
       type={field.type}
-      className={itemClassName}
+      className={className}
     >
       <FieldComponent field={field} path={path} {...props} />
     </ZWrapper>

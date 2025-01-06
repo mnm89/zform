@@ -49,14 +49,14 @@ export default function ContactForm() {
       }}
       fieldsProps={{
         email: {
-          itemClassName: "col-span-2",
+          className: "col-span-2",
         },
         message: {
-          itemClassName: "col-span-2",
+          className: "col-span-2",
           typeOverride: "textarea",
         },
         consent: {
-          itemClassName: "col-span-2",
+          className: "col-span-2",
           labelOverride: "Accept terms and conditions",
           descriptionOverride:
             "You agree to our Terms of Service and Privacy Policy.",

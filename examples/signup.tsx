@@ -55,7 +55,7 @@ export default function SignUpForm() {
       }}
       fieldsProps={{
         email: {
-          itemClassName: "col-span-2",
+          className: "col-span-2",
         },
         password: {
           typeOverride: "password",
