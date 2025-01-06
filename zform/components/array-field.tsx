@@ -1,9 +1,8 @@
 import React, { ReactNode } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import {} from "./core/context";
-import { getLabel, ParsedField } from "./core/parser";
-import { ZFormField } from "./form-field";
+import { getLabel, ParsedField } from "../core/parser";
+import { ZField } from "../field";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, TrashIcon } from "lucide-react";
 
@@ -88,7 +87,7 @@ export const ArrayField: React.FC<{
           onRemove={() => remove(index)}
           index={index}
         >
-          <ZFormField
+          <ZField
             field={field.schema![0]!}
             path={[...path, index.toString()]}
           />
