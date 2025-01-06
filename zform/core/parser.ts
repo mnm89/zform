@@ -159,23 +159,38 @@ function createEnhancedSchemaShape(
   Object.keys(shape).forEach((key) => {
     const field = shape[key];
     const isOptional = field.isOptional();
-    // If the field is a string, apply the transformation
     if (field instanceof z.ZodString) {
-      // we apply the transformation on a string field
-      // to force the validation against the required_error
-      enhancedShape[key] = field.transform((val) =>
-        val === "" ? undefined : val
-      );
-
       if (!isOptional) {
-        const message =
-          "required_error" in field._def
-            ? (field._def.required_error as string)
-            : "This field is required";
-        enhancedShape[key] = enhancedShape[key].refine(
-          (val) => val !== undefined,
-          { message }
-        ) as z.ZodTypeAny;
+        // If the field is a string, apply the refinement with the required error for falsy string values
+        const message = field._def.errorMap?.(
+          {
+            code: "invalid_type",
+            expected: "string",
+            received: "undefined",
+            path: [key],
+          },
+          { data: undefined, defaultError: "This field is required" }
+        ).message;
+
+        enhancedShape[key] = field.refine((val) => !!val, {
+          message,
+        });
+      }
+    } else if (field instanceof z.ZodObject) {
+      enhancedShape[key] = z.object(createEnhancedSchemaShape(field));
+      if (!isOptional) {
+        const message = field._def.errorMap?.(
+          {
+            code: "invalid_type",
+            expected: "string",
+            received: "undefined",
+            path: [key],
+          },
+          { data: undefined, defaultError: "This field is required" }
+        ).message;
+
+        console.log({ message });
+        enhancedShape[key] = enhancedShape[key].refine((val) => !!val, message);
       }
     } else {
       enhancedShape[key] = field; // Leave other types untouched

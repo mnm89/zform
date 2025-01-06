@@ -1,6 +1,6 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { getDescriptions, getLabel, ParsedField } from "./core/parser";
+import { getDescriptions, getLabel } from "./core/parser";
 
 import {
   FormControl,
@@ -11,8 +11,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { ArrayField } from "./array-field";
-import { ObjectField } from "./object-field";
+import { ArrayField } from "./components/array-field";
+import { ObjectField } from "./components/object-field";
 import { getStringFieldComponent } from "./components/string-field";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
@@ -20,30 +20,10 @@ import { cn } from "@/lib/utils";
 import { getBooleanFieldComponent } from "./components/boolean-field";
 import { getSelectFieldComponent } from "./components/select-field";
 import { getDateFieldComponent } from "./components/date-field";
-import { CalendarProps } from "@/components/ui/calendar";
 import { getNumberFieldComponent } from "./components/number-field";
+import { ZFieldProps } from "./types";
 
-export type FieldProps = {
-  itemClassName?: string;
-  inputProps?: React.ComponentProps<"input">;
-  textareaProps?: React.ComponentProps<"textarea">;
-  typeOverride?:
-    | "password"
-    | "switch"
-    | "textarea"
-    | "autocomplete"
-    | "range"
-    | "stepper";
-  calendarProps?: CalendarProps;
-  labelOverride?: string;
-  descriptionOverride?: string;
-};
-
-export const ZFormField: React.FC<{
-  field: ParsedField;
-  path: string[];
-  props?: FieldProps;
-}> = ({ field, path, props = {} }) => {
+export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
   const { control } = useFormContext();
   const {
     labelOverride,
@@ -56,9 +36,28 @@ export const ZFormField: React.FC<{
   } = props;
   const label = labelOverride || getLabel(field);
   const description = descriptionOverride || getDescriptions(field);
+  const name = path.join(".");
 
   if (field.type === "array") return <ArrayField field={field} path={path} />;
-  if (field.type === "object") return <ObjectField field={field} path={path} />;
+  if (field.type === "object")
+    return (
+      <FormField
+        name={name}
+        control={control}
+        render={() => (
+          <fieldset className={itemClassName}>
+            <legend className="p-2 font-semibold">{label}</legend>
+            <FormItem>
+              <FormControl>
+                <ObjectField field={field} path={path} />
+              </FormControl>
+              <FormDescription>{description}</FormDescription>
+              <FormMessage />
+            </FormItem>
+          </fieldset>
+        )}
+      />
+    );
 
   if (field.type === "string") {
     const FieldComponent = getStringFieldComponent(
@@ -66,7 +65,7 @@ export const ZFormField: React.FC<{
     );
     return (
       <FormField
-        name={field.key}
+        name={name}
         control={control}
         render={() => (
           <FormItem className={itemClassName}>
@@ -89,7 +88,7 @@ export const ZFormField: React.FC<{
     const FieldComponent = getBooleanFieldComponent(typeOverride as "switch");
     return (
       <FormField
-        name={field.key}
+        name={name}
         control={control}
         render={() => (
           <FormItem
@@ -119,7 +118,7 @@ export const ZFormField: React.FC<{
     );
     return (
       <FormField
-        name={field.key}
+        name={name}
         control={control}
         render={() => (
           <FormItem className={itemClassName}>
@@ -138,7 +137,7 @@ export const ZFormField: React.FC<{
     const FieldComponent = getDateFieldComponent(typeOverride as "range");
     return (
       <FormField
-        name={field.key}
+        name={name}
         control={control}
         render={() => (
           <FormItem className={itemClassName}>
@@ -157,7 +156,7 @@ export const ZFormField: React.FC<{
     const FieldComponent = getNumberFieldComponent(typeOverride as "stepper");
     return (
       <FormField
-        name={field.key}
+        name={name}
         control={control}
         render={() => (
           <FormItem className={itemClassName}>

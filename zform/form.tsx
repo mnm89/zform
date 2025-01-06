@@ -1,11 +1,6 @@
 "use client";
-import React, { ReactNode, useEffect } from "react";
-import {
-  useForm,
-  DefaultValues,
-  UseFormReturn,
-  SubmitHandler,
-} from "react-hook-form";
+import React, { useEffect } from "react";
+import { useForm, DefaultValues } from "react-hook-form";
 import { z } from "zod";
 import { ZFormProvider } from "./core/context";
 import { Form } from "@/components/ui/form";
@@ -16,35 +11,9 @@ import {
   parseSchema,
   ZodObjectOrWrapped,
 } from "./core/parser";
-import { FieldProps, ZFormField } from "./form-field";
+import { ZField } from "./field";
+import { ZFormProps } from "./types";
 
-interface ZFormBaseProps<TSchema extends ZodObjectOrWrapped> {
-  schema: TSchema;
-  defaultValues?: DefaultValues<z.infer<TSchema>>;
-  onSubmit?: SubmitHandler<z.infer<TSchema>>;
-  onFormInit?: (
-    form: UseFormReturn<z.infer<TSchema>, unknown, undefined>
-  ) => void;
-}
-
-interface ZFormComponentsProps {
-  formProps?: Omit<React.ComponentProps<"form">, "onSubmit">;
-  submitProps?: Omit<React.ComponentProps<typeof Button>, "type" | "asChild">;
-  resetProps?: Omit<React.ComponentProps<typeof Button>, "type" | "asChild">;
-  children?: ReactNode;
-  header?: ReactNode;
-  footer?: ReactNode;
-  withSubmit?: boolean;
-  withReset?: boolean;
-}
-
-export interface ZFormProps<TSchema extends ZodObjectOrWrapped>
-  extends ZFormBaseProps<TSchema>,
-    ZFormComponentsProps {
-  fieldsProps?: {
-    [K in keyof z.infer<TSchema>]?: FieldProps;
-  };
-}
 export function ZForm<TSchema extends ZodObjectOrWrapped>({
   schema: inputSchema,
   defaultValues,
@@ -90,7 +59,7 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
             {...formProps}
           >
             {fields.map((field, index) => (
-              <ZFormField
+              <ZField
                 key={`field-${index}-${field.key}`}
                 field={field}
                 path={[field.key]}

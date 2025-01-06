@@ -25,6 +25,11 @@ const examples = [
     description:
       "A newsletter subscription form with date and boolean(switch) fields. using camelCase for schema keys",
   },
+  {
+    name: "Post Form",
+    path: "/examples/post",
+    description: "A post creation form with array and object fields",
+  },
 ];
 
 export default function ExamplesIndex() {

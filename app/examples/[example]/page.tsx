@@ -27,7 +27,7 @@ export default async function ExampleDetail({ params }: Props) {
   );
 
   return (
-    <main className="container">
+    <main>
       <Link href="/examples" className="absolute top-4 left-4">
         Back
       </Link>
