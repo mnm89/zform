@@ -1,11 +1,12 @@
 import React from "react";
 import { useFormField } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import { ParsedField } from "../core/parser";
+import { ParsedField } from "../core/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { ZFieldProps } from "../types";
 
 function useStringField(field: ParsedField) {
   const { register } = useFormContext();
@@ -14,36 +15,26 @@ function useStringField(field: ParsedField) {
   return { type, key, required, id, ...register(name) };
 }
 
-export const TextField: React.FC<{
-  field: ParsedField;
-  inputProps?: React.ComponentProps<"input">;
-}> = ({ field, inputProps }) => {
-  const { key, ...props } = useStringField(field);
-
-  return <Input key={key} {...inputProps} {...props} />;
+export const TextField: React.FC<ZFieldProps> = ({ field, props }) => {
+  const { key, ...other } = useStringField(field);
+  return <Input key={key} {...other} {...props?.inputProps} />;
 };
 
-export const TextareaField: React.FC<{
-  field: ParsedField;
-  textareaProps?: React.ComponentProps<"textarea">;
-}> = ({ field, textareaProps }) => {
-  const { key, ...props } = useStringField(field);
-  return <Textarea key={key} {...textareaProps} {...props} rows={4} />;
+export const TextareaField: React.FC<ZFieldProps> = ({ field, props }) => {
+  const { key, ...other } = useStringField(field);
+  return <Textarea key={key} rows={4} {...other} {...props?.textareaProps} />;
 };
-export const PasswordField: React.FC<{
-  field: ParsedField;
-  inputProps?: React.ComponentProps<"input">;
-}> = ({ field, inputProps }) => {
+export const PasswordField: React.FC<ZFieldProps> = ({ field, props }) => {
   const [showPassword, setShowPassword] = React.useState(false);
-  const { key, ...props } = useStringField(field);
+  const { key, ...other } = useStringField(field);
 
   return (
     <div className="relative">
       <Input
         key={key}
         className="hide-password-toggle pr-10"
-        {...inputProps}
-        {...props}
+        {...other}
+        {...props?.inputProps}
         type={showPassword ? "text" : "password"}
       />
       <Button
@@ -53,7 +44,7 @@ export const PasswordField: React.FC<{
         className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
         onClick={() => setShowPassword((prev) => !prev)}
       >
-        {showPassword && !props.disabled ? (
+        {showPassword && !other.disabled ? (
           <EyeIcon className="size-4" aria-hidden="true" />
         ) : (
           <EyeOffIcon className="size-4" aria-hidden="true" />

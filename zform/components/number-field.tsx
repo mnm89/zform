@@ -1,11 +1,12 @@
 import React from "react";
 import { useFormField } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import { ParsedField } from "../core/parser";
+import { ParsedField } from "../core/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Minus, Plus } from "lucide-react";
+import { ZFieldProps } from "../types";
 
 function useNumberField(field: ParsedField) {
   const { register, setValue, getValues } = useFormContext();
@@ -31,27 +32,21 @@ function useNumberField(field: ParsedField) {
   };
 }
 
-export const NumberField: React.FC<{
-  field: ParsedField;
-  inputProps?: React.ComponentProps<"input">;
-}> = ({ field, inputProps }) => {
-  const { key, ...props } = useNumberField(field);
+export const NumberField: React.FC<ZFieldProps> = ({ field, props }) => {
+  const { key, ...other } = useNumberField(field);
 
-  return <Input key={key} {...inputProps} {...props} />;
+  return <Input key={key} {...other} {...props?.inputProps} />;
 };
 
-const StepperField: React.FC<{
-  field: ParsedField;
-  inputProps?: React.ComponentProps<"input">;
-}> = ({ field, inputProps }) => {
+const StepperField: React.FC<ZFieldProps> = ({ field, props }) => {
   const { key, id, increment, decrement, value } = useNumberField(field);
 
-  const step = inputProps?.step ? Number(inputProps.step) : 1;
-  const max = inputProps?.max
-    ? Number(inputProps.max)
+  const step = props?.inputProps?.step ? Number(props.inputProps.step) : 1;
+  const max = props?.inputProps?.max
+    ? Number(props.inputProps.max)
     : Number.MAX_SAFE_INTEGER;
-  const min = inputProps?.min
-    ? Number(inputProps.min)
+  const min = props?.inputProps?.min
+    ? Number(props.inputProps.min)
     : Number.MIN_SAFE_INTEGER;
 
   return (

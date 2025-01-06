@@ -3,8 +3,9 @@ import { useFormContext } from "react-hook-form";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
-import { ParsedField } from "../core/parser";
+import { ParsedField } from "../core/types";
 import { useFormField } from "@/components/ui/form";
+import { ZFieldProps } from "../types";
 
 function useBooleanField(field: ParsedField) {
   const { setValue, getValues } = useFormContext();
@@ -19,16 +20,12 @@ function useBooleanField(field: ParsedField) {
   return { required, id, key, onCheckedChange, checked };
 }
 
-export const BooleanField: React.FC<{
-  field: ParsedField;
-}> = ({ field }) => {
+export const BooleanField: React.FC<ZFieldProps> = ({ field }) => {
   const { key, ...props } = useBooleanField(field);
   return <Checkbox key={key} {...props} />;
 };
 
-export const SwitchField: React.FC<{
-  field: ParsedField;
-}> = ({ field }) => {
+export const SwitchField: React.FC<ZFieldProps> = ({ field }) => {
   const { key, ...props } = useBooleanField(field);
 
   return <Switch key={key} {...props} />;

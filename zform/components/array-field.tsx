@@ -1,10 +1,11 @@
 import React, { ReactNode } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import { getLabel, ParsedField } from "../core/parser";
+import { ParsedField } from "../core/types";
 import { ZField } from "../field";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, TrashIcon } from "lucide-react";
+import { getLabel } from "../core/parser";
 
 export interface ArrayWrapperProps {
   label: string | ReactNode;
@@ -73,7 +74,7 @@ export const ArrayField: React.FC<{
 
   const subFieldType = field.schema?.[0]?.type;
   const defaultValue =
-    subFieldType === "object" ? {} : subFieldType === "array" ? [] : null;
+    subFieldType === "object" ? {} : subFieldType === "array" ? [] : undefined;
 
   return (
     <ArrayWrapper

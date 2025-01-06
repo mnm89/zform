@@ -4,14 +4,15 @@ import { useFormContext } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Calendar, CalendarProps } from "@/components/ui/calendar";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ParsedField } from "../core/parser";
+import { ParsedField } from "../core/types";
 import { useFormField } from "@/components/ui/form";
+import { ZFieldProps } from "../types";
 
 function formatDate(date: Date) {
   const year = date.getFullYear();
@@ -29,12 +30,10 @@ function useDateField(field: ParsedField) {
   const onSelect = (date: Date | undefined) => {
     setValue(name, date, { shouldValidate: true });
   };
-  return { key, id, name, onSelect, selected };
+
+  return { key, id, onSelect, selected };
 }
-const DateField: React.FC<{
-  field: ParsedField;
-  calendarProps?: CalendarProps;
-}> = ({ field, calendarProps }) => {
+const DateField: React.FC<ZFieldProps> = ({ field, props }) => {
   const popoverTriggerRef = useRef<HTMLButtonElement>(null); // Ref for the PopoverTrigger
 
   const { id, key, onSelect, selected } = useDateField(field);
@@ -60,7 +59,7 @@ const DateField: React.FC<{
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
-          {...calendarProps}
+          {...props?.calendarProps}
           id={id}
           mode="single"
           captionLayout="dropdown"

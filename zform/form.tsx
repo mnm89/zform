@@ -6,13 +6,10 @@ import { ZFormProvider } from "./core/context";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  getDefaultValues,
-  parseSchema,
-  ZodObjectOrWrapped,
-} from "./core/parser";
+import { getDefaultValues, parseSchema } from "./core/parser";
 import { ZField } from "./field";
 import { ZFormProps } from "./types";
+import { ZodObjectOrWrapped } from "./core/types";
 
 export function ZForm<TSchema extends ZodObjectOrWrapped>({
   schema: inputSchema,

@@ -21,71 +21,13 @@ import { getBooleanFieldComponent } from "./components/boolean-field";
 import { getSelectFieldComponent } from "./components/select-field";
 import { getDateFieldComponent } from "./components/date-field";
 import { getNumberFieldComponent } from "./components/number-field";
-import { ZFieldProps } from "./types";
+import { ZFieldProps, ZWrapperProps } from "./types";
+import { ParsedField } from "./core/types";
 
-export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
-  const { control } = useFormContext();
-  const {
-    labelOverride,
-    descriptionOverride,
-    itemClassName,
-    typeOverride,
-    inputProps,
-    textareaProps,
-    calendarProps,
-  } = props;
-  const label = labelOverride || getLabel(field);
-  const description = descriptionOverride || getDescriptions(field);
-  const name = path.join(".");
-
-  if (field.type === "array") return <ArrayField field={field} path={path} />;
-  if (field.type === "object")
-    return (
-      <FormField
-        name={name}
-        control={control}
-        render={() => (
-          <fieldset className={itemClassName}>
-            <legend className="p-2 font-semibold">{label}</legend>
-            <FormItem>
-              <FormControl>
-                <ObjectField field={field} path={path} />
-              </FormControl>
-              <FormDescription>{description}</FormDescription>
-              <FormMessage />
-            </FormItem>
-          </fieldset>
-        )}
-      />
-    );
-
-  if (field.type === "string") {
-    const FieldComponent = getStringFieldComponent(
-      typeOverride as "password" | "textarea"
-    );
-    return (
-      <FormField
-        name={name}
-        control={control}
-        render={() => (
-          <FormItem className={itemClassName}>
-            <FormLabel>{label}</FormLabel>
-            <FormControl>
-              <FieldComponent
-                field={field}
-                inputProps={inputProps}
-                textareaProps={textareaProps}
-              />
-            </FormControl>
-            <FormDescription>{description}</FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    );
-  }
-  if (field.type === "boolean") {
-    const FieldComponent = getBooleanFieldComponent(typeOverride as "switch");
+export const ZWrapper: React.FC<
+  ZWrapperProps & { children: React.ReactNode }
+> = ({ control, className, description, label, name, type, children }) => {
+  if (type === "boolean")
     return (
       <FormField
         name={name}
@@ -94,12 +36,10 @@ export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
           <FormItem
             className={cn(
               "flex flex-row justify-start space-x-3 space-y-0",
-              itemClassName
+              className
             )}
           >
-            <FormControl>
-              <FieldComponent field={field} />
-            </FormControl>
+            <FormControl>{children}</FormControl>
 
             <div className="space-y-1 leading-none">
               <FormLabel>{label}</FormLabel>
@@ -110,73 +50,82 @@ export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
         )}
       />
     );
-  }
+  return (
+    <FormField
+      name={name}
+      control={control}
+      render={() => (
+        <FormItem className={className}>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>{children}</FormControl>
+          <FormDescription>{description}</FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+};
 
-  if (field.type === "select") {
-    const FieldComponent = getSelectFieldComponent(
-      typeOverride as "autocomplete"
-    );
+export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
+  const { control } = useFormContext();
+  const { labelOverride, descriptionOverride, itemClassName, typeOverride } =
+    props;
+  const label = labelOverride || getLabel(field);
+  const description = descriptionOverride || getDescriptions(field) || "";
+  const name = path.join(".");
+
+  if (field.type === "array") return <ArrayField field={field} path={path} />;
+  if (field.type === "object")
     return (
-      <FormField
-        name={name}
-        control={control}
-        render={() => (
-          <FormItem className={itemClassName}>
-            <FormLabel>{label}</FormLabel>
-            <FormControl>
-              <FieldComponent field={field} />
-            </FormControl>
-            <FormDescription>{description}</FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
+      <ObjectField
+        field={field}
+        path={path}
+        className={itemClassName}
+        label={label}
       />
     );
-  }
-  if (field.type === "date") {
-    const FieldComponent = getDateFieldComponent(typeOverride as "range");
+
+  const FieldComponent = getFieldComponent(field.type, typeOverride);
+
+  if (!FieldComponent)
     return (
-      <FormField
-        name={name}
-        control={control}
-        render={() => (
-          <FormItem className={itemClassName}>
-            <FormLabel>{label}</FormLabel>
-            <FormControl>
-              <FieldComponent field={field} calendarProps={calendarProps} />
-            </FormControl>
-            <FormDescription>{description}</FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <Alert variant="destructive" className="h-full">
+        <AlertCircle className="size-4" />
+        <AlertTitle>Unhandled field type {field.type}</AlertTitle>
+        <AlertDescription> - {field.key}</AlertDescription>
+      </Alert>
     );
-  }
-  if (field.type === "number") {
-    const FieldComponent = getNumberFieldComponent(typeOverride as "stepper");
-    return (
-      <FormField
-        name={name}
-        control={control}
-        render={() => (
-          <FormItem className={itemClassName}>
-            <FormLabel>{label}</FormLabel>
-            <FormControl>
-              <FieldComponent field={field} inputProps={inputProps} />
-            </FormControl>
-            <FormDescription>{description}</FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    );
-  }
 
   return (
-    <Alert variant="destructive" className="h-full">
-      <AlertCircle className="size-4" />
-      <AlertTitle>Unhandled field type {field.type}</AlertTitle>
-      <AlertDescription> - {field.key}</AlertDescription>
-    </Alert>
+    <ZWrapper
+      control={control}
+      label={label}
+      description={description}
+      name={name}
+      type={field.type}
+      className={itemClassName}
+    >
+      <FieldComponent field={field} path={path} {...props} />
+    </ZWrapper>
   );
+};
+
+export const getFieldComponent = (
+  type: ParsedField["type"],
+  typeOverride?: Exclude<ZFieldProps["props"], undefined>["typeOverride"]
+) => {
+  switch (type) {
+    case "string":
+      return getStringFieldComponent(typeOverride as "password" | "textarea");
+    case "boolean":
+      return getBooleanFieldComponent(typeOverride as "switch");
+    case "select":
+      return getSelectFieldComponent(typeOverride as "autocomplete");
+    case "date":
+      return getDateFieldComponent(typeOverride as "range");
+    case "number":
+      return getNumberFieldComponent(typeOverride as "stepper");
+    default:
+      return null;
+  }
 };

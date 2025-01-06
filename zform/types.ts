@@ -1,9 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
-import { ParsedField, ZodObjectOrWrapped } from "./core/parser";
-import { DefaultValues, SubmitHandler, UseFormReturn } from "react-hook-form";
+import {
+  Control,
+  DefaultValues,
+  FieldValues,
+  SubmitHandler,
+  UseFormReturn,
+} from "react-hook-form";
 import { z } from "zod";
 import { CalendarProps } from "@/components/ui/calendar";
+import { FieldType, ParsedField, ZodObjectOrWrapped } from "./core/types";
 
 interface ZFormBaseProps<TSchema extends ZodObjectOrWrapped> {
   schema: TSchema;
@@ -39,7 +45,14 @@ type FieldProps = {
   labelOverride?: string;
   descriptionOverride?: string;
 };
-
+export interface ZWrapperProps {
+  control: Control<FieldValues, unknown>;
+  type: FieldType;
+  name: string;
+  label: string;
+  description: string;
+  className?: string;
+}
 export interface ZFieldProps {
   field: ParsedField;
   path: string[];
