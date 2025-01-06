@@ -20,9 +20,7 @@ const contactSchema = z.object({
       (phone) => !phone || /^\+?\d{10,15}$/.test(phone),
       "Invalid phone number format"
     ),
-  email: z
-    .string({ required_error: "Email is required" })
-    .email("Invalid email address"),
+  email: z.string().email("Invalid email address"),
   subject: z.nativeEnum(Subject).optional(),
   message: z
     .string({ required_error: "Message is required" })

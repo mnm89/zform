@@ -11,16 +11,16 @@ const mySchema = z
     last_name: z
       .string({ required_error: "Please enter your last name" })
       .max(50),
-    email: z
-      .string({ required_error: "Please provide your personal email" })
-      .email(),
+    email: z.string().email("Invalid email address"),
     password: z
-      .string({ required_error: "Please choose a password" })
+      .string()
       .min(6, "Password must be at least 6 characters long")
       .regex(/[a-z]/, "Password must contain at least one lowercase letter")
       .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
       .regex(/[0-9]/, "Password must contain at least one number"),
-    confirm_password: z.string(),
+    confirm_password: z.string({
+      required_error: "Please confirm your password",
+    }),
   })
   .refine((data) => data.password === data.confirm_password, {
     message: "Passwords don't match",

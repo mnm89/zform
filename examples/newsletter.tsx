@@ -3,9 +3,7 @@ import ZForm from "@/zform";
 import { z } from "zod";
 
 const newsletterSchema = z.object({
-  email: z
-    .string({ required_error: "Email is required" })
-    .email("Invalid email address"),
+  email: z.string().email("Invalid email address"),
   dateOfBirth: z
     .date({ required_error: "Date of birth is required" })
     .refine(
