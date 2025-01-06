@@ -31,7 +31,7 @@ export default function NewsletterForm() {
       formProps={{
         className: "grid grid-cols-2 gap-2 items-center",
       }}
-      fieldsProps={{
+      fieldsConfig={{
         email: {
           className: "col-span-2",
         },

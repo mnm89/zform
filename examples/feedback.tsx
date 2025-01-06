@@ -30,7 +30,7 @@ export default function FeedbackForm() {
       formProps={{
         className: "grid grid-cols-2 gap-2 items-center",
       }}
-      fieldsProps={{
+      fieldsConfig={{
         rating: {
           inputProps: {
             min: 1,

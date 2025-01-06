@@ -22,7 +22,6 @@ import { getSelectFieldComponent } from "./components/select-field";
 import { getDateFieldComponent } from "./components/date-field";
 import { getNumberFieldComponent } from "./components/number-field";
 import { ZFieldProps, ZWrapperProps } from "./types";
-import { ParsedField } from "./core/types";
 
 export const ZWrapper: React.FC<
   ZWrapperProps & { children: React.ReactNode }
@@ -67,8 +66,9 @@ export const ZWrapper: React.FC<
   );
 };
 
-export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
-  const { labelOverride, descriptionOverride, className, typeOverride } = props;
+export const ZField: React.FC<ZFieldProps> = (props) => {
+  const { field, path, config = {} } = props;
+  const { labelOverride, descriptionOverride, className } = config;
   const label = labelOverride || getLabel(field);
   const description = descriptionOverride || getDescriptions(field) || "";
   const name = path.join(".");
@@ -94,7 +94,7 @@ export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
       />
     );
 
-  const FieldComponent = getFieldComponent(field.type, typeOverride);
+  const FieldComponent = getFieldComponent(props);
 
   if (!FieldComponent)
     return (
@@ -113,26 +113,25 @@ export const ZField: React.FC<ZFieldProps> = ({ field, path, props = {} }) => {
       type={field.type}
       className={className}
     >
-      <FieldComponent field={field} path={path} {...props} />
+      <FieldComponent field={field} path={path} {...config} />
     </ZWrapper>
   );
 };
 
-export const getFieldComponent = (
-  type: ParsedField["type"],
-  typeOverride?: Exclude<ZFieldProps["props"], undefined>["typeOverride"]
-) => {
-  switch (type) {
+export const getFieldComponent = ({ field, config }: ZFieldProps) => {
+  switch (field.type) {
     case "string":
-      return getStringFieldComponent(typeOverride as "password" | "textarea");
+      return getStringFieldComponent(
+        config?.typeOverride as "password" | "textarea"
+      );
     case "boolean":
-      return getBooleanFieldComponent(typeOverride as "switch");
+      return getBooleanFieldComponent(config?.typeOverride as "switch");
     case "select":
-      return getSelectFieldComponent(typeOverride as "autocomplete");
+      return getSelectFieldComponent(config?.typeOverride as "autocomplete");
     case "date":
-      return getDateFieldComponent(typeOverride as "range");
+      return getDateFieldComponent(config?.typeOverride as "range");
     case "number":
-      return getNumberFieldComponent(typeOverride as "stepper");
+      return getNumberFieldComponent(config?.typeOverride as "stepper");
     default:
       return null;
   }

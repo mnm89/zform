@@ -29,9 +29,12 @@ export default function WorkExperienceForm() {
       formProps={{
         className: "flex flex-col items-center gap-4",
       }}
-      fieldsProps={{
+      fieldsConfig={{
         job_history: {
-          className: "w-full border",
+          className: "w-full",
+          item: {
+            className: "grid grid-cols-2 gap-2",
+          },
         },
       }}
     />

@@ -24,20 +24,25 @@ interface ZFormComponentsProps {
   withSubmit?: boolean;
   withReset?: boolean;
 }
-type FieldProps = {
-  className?: string;
-  inputProps?: React.ComponentProps<"input">;
-  textareaProps?: React.ComponentProps<"textarea">;
-  typeOverride?:
-    | "password"
-    | "switch"
-    | "textarea"
-    | "autocomplete"
-    | "range"
-    | "stepper";
-  calendarProps?: CalendarProps;
+
+type BaseFieldConfig = {
   labelOverride?: string;
   descriptionOverride?: string;
+  className?: string;
+};
+
+type FieldConfig = BaseFieldConfig & {
+  item?: { className?: string; config?: FieldConfig };
+  inputProps?: React.ComponentProps<"input">;
+  typeOverride?:
+    | "password"
+    | "textarea"
+    | "autocomplete"
+    | "stepper"
+    | "switch"
+    | "range";
+  textareaProps?: React.ComponentProps<"textarea">;
+  calendarProps?: CalendarProps;
 };
 export interface ZWrapperProps {
   type: FieldType;
@@ -46,15 +51,17 @@ export interface ZWrapperProps {
   description: string;
   className?: string;
 }
-export interface ZFieldProps {
-  field: ParsedField;
+
+export type ZFieldProps<T = FieldType> = {
+  field: ParsedField<T>;
   path: string[];
-  props?: FieldProps;
-}
+  config?: FieldConfig;
+};
+
 export interface ZFormProps<TSchema extends ZodObjectOrWrapped>
   extends ZFormBaseProps<TSchema>,
     ZFormComponentsProps {
-  fieldsProps?: {
-    [K in keyof z.infer<TSchema>]?: FieldProps;
+  fieldsConfig?: {
+    [K in keyof z.infer<TSchema>]?: FieldConfig;
   };
 }

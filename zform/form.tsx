@@ -20,7 +20,7 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
   withReset = false,
   onFormInit = () => {},
   formProps = {},
-  fieldsProps = {},
+  fieldsConfig = {},
   submitProps = {},
   resetProps = {},
   header,
@@ -60,7 +60,7 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
                 key={`field-${index}-${field.key}`}
                 field={field}
                 path={[field.key]}
-                props={fieldsProps?.[field.key]}
+                config={fieldsConfig?.[field.key]}
               />
             ))}
 

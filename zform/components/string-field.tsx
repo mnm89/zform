@@ -15,16 +15,16 @@ function useStringField(field: ParsedField) {
   return { type, key, required, id, ...register(name) };
 }
 
-export const TextField: React.FC<ZFieldProps> = ({ field, props }) => {
+export const TextField: React.FC<ZFieldProps> = ({ field, config }) => {
   const { key, ...other } = useStringField(field);
-  return <Input key={key} {...other} {...props?.inputProps} />;
+  return <Input key={key} {...other} {...config?.inputProps} />;
 };
 
-export const TextareaField: React.FC<ZFieldProps> = ({ field, props }) => {
+export const TextareaField: React.FC<ZFieldProps> = ({ field, config }) => {
   const { key, ...other } = useStringField(field);
-  return <Textarea key={key} rows={4} {...other} {...props?.textareaProps} />;
+  return <Textarea key={key} rows={4} {...other} {...config?.textareaProps} />;
 };
-export const PasswordField: React.FC<ZFieldProps> = ({ field, props }) => {
+export const PasswordField: React.FC<ZFieldProps> = ({ field, config }) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const { key, ...other } = useStringField(field);
 
@@ -34,7 +34,7 @@ export const PasswordField: React.FC<ZFieldProps> = ({ field, props }) => {
         key={key}
         className="hide-password-toggle pr-10"
         {...other}
-        {...props?.inputProps}
+        {...config?.inputProps}
         type={showPassword ? "text" : "password"}
       />
       <Button

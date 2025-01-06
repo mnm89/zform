@@ -7,9 +7,9 @@ export type ZodObjectOrWrapped<
   | z.ZodEffects<z.ZodObject<T, UnknownKeysParam>>;
 
 export type FieldType = ReturnType<typeof inferFieldType>;
-export interface ParsedField {
+export interface ParsedField<T = FieldType> {
   key: string;
-  type: FieldType;
+  type: T;
   required: boolean;
   default?: unknown;
   description?: string;
