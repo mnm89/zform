@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "create-setup": "node ./scripts/create-setup.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
