@@ -1,5 +1,5 @@
 "use client";
-import ZForm from "@/zform";
+import ZForm, { Config } from "@/zform";
 import { z } from "zod";
 
 const newsletterSchema = z.object({
@@ -12,6 +12,15 @@ const newsletterSchema = z.object({
     ),
   subscribeToNewsletter: z.boolean().default(false),
 });
+
+const config: Config<typeof newsletterSchema> = {
+  email: {
+    className: "col-span-2",
+  },
+  subscribeToNewsletter: {
+    typeOverride: "switch",
+  },
+};
 
 export default function NewsletterForm() {
   return (
@@ -31,14 +40,7 @@ export default function NewsletterForm() {
       formProps={{
         className: "grid grid-cols-2 gap-2 items-center",
       }}
-      fieldsConfig={{
-        email: {
-          className: "col-span-2",
-        },
-        subscribeToNewsletter: {
-          typeOverride: "switch",
-        },
-      }}
+      config={config}
     />
   );
 }

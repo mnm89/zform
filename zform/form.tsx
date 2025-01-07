@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { useForm, DefaultValues } from "react-hook-form";
 import { z } from "zod";
-import { ZFormProvider } from "./core/context";
+import { ZFormProvider } from "./context";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,7 +20,7 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
   withReset = false,
   onFormInit = () => {},
   formProps = {},
-  fieldsConfig = {},
+  config = {},
   submitProps = {},
   resetProps = {},
   header,
@@ -46,6 +46,7 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
         value={{
           fields,
           schema,
+          config,
         }}
       >
         <div className="flex flex-col gap-4 max-w-screen-sm w-full">
@@ -60,7 +61,6 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
                 key={`field-${index}-${field.key}`}
                 field={field}
                 path={[field.key]}
-                config={fieldsConfig?.[field.key]}
               />
             ))}
 

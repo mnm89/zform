@@ -1,19 +1,18 @@
 import React from "react";
 import { ZField } from "../field";
 import { ParsedField } from "../core/types";
+import { useZField } from "../context";
 
 export const ObjectField: React.FC<{
   field: ParsedField;
   path: string[];
-  className?: string;
-  label?: string;
-  description?: string;
-}> = ({ field, path, className, label, description }) => {
+}> = ({ field, path }) => {
+  const { className, fieldLabel, fieldDescription } = useZField(field, path);
   return (
     <fieldset className={className}>
       <legend className="p-2">
-        <p className="font-semibold">{label}</p>
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="font-semibold">{fieldLabel}</p>
+        <p className="text-sm text-muted-foreground">{fieldDescription}</p>
       </legend>
       {Object.entries(field.schema!).map(([, subField]) => (
         <ZField
@@ -24,4 +23,9 @@ export const ObjectField: React.FC<{
       ))}
     </fieldset>
   );
+};
+export const getObjectFieldComponent = (typeOverride?: "accordion") => {
+  if (typeOverride === "accordion")
+    throw new Error("Not implemented", { cause: { typeOverride } });
+  return ObjectField;
 };

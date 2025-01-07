@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Minus, Plus } from "lucide-react";
 import { ZFieldProps } from "../types";
+import { useZField } from "../context";
 
 function useNumberField(field: ParsedField) {
   const { register, setValue, getValues } = useFormContext();
@@ -32,21 +33,22 @@ function useNumberField(field: ParsedField) {
   };
 }
 
-export const NumberField: React.FC<ZFieldProps> = ({ field, props }) => {
+export const NumberField: React.FC<ZFieldProps> = ({ field, path }) => {
   const { key, ...other } = useNumberField(field);
-
-  return <Input key={key} {...other} {...props?.inputProps} />;
+  const { inputProps } = useZField(field, path);
+  return <Input key={key} {...other} {...inputProps} />;
 };
 
-const StepperField: React.FC<ZFieldProps> = ({ field, props }) => {
+const StepperField: React.FC<ZFieldProps> = ({ field, path }) => {
   const { key, id, increment, decrement, value } = useNumberField(field);
+  const { inputProps } = useZField(field, path);
 
-  const step = props?.inputProps?.step ? Number(props.inputProps.step) : 1;
-  const max = props?.inputProps?.max
-    ? Number(props.inputProps.max)
+  const step = inputProps?.step ? Number(inputProps.step) : 1;
+  const max = inputProps?.max
+    ? Number(inputProps.max)
     : Number.MAX_SAFE_INTEGER;
-  const min = props?.inputProps?.min
-    ? Number(props.inputProps.min)
+  const min = inputProps?.min
+    ? Number(inputProps.min)
     : Number.MIN_SAFE_INTEGER;
 
   return (

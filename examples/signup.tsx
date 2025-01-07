@@ -1,5 +1,5 @@
 "use client";
-import ZForm from "@/zform";
+import ZForm, { Config } from "@/zform";
 import Link from "next/link";
 import { z } from "zod";
 
@@ -27,6 +27,20 @@ const mySchema = z
     path: ["confirm_password"],
   });
 
+const config: Config<typeof mySchema> = {
+  email: {
+    className: "col-span-2",
+  },
+  password: {
+    typeOverride: "password",
+    inputProps: { autoComplete: "new-password" },
+  },
+  confirm_password: {
+    typeOverride: "password",
+    inputProps: { autoComplete: "new-password" },
+  },
+};
+
 export default function SignUpForm() {
   return (
     <ZForm
@@ -53,19 +67,7 @@ export default function SignUpForm() {
       formProps={{
         className: "grid grid-cols-2 gap-2 items-center",
       }}
-      fieldsConfig={{
-        email: {
-          className: "col-span-2",
-        },
-        password: {
-          typeOverride: "password",
-          inputProps: { autoComplete: "new-password" },
-        },
-        confirm_password: {
-          typeOverride: "password",
-          inputProps: { autoComplete: "new-password" },
-        },
-      }}
+      config={config}
     />
   );
 }

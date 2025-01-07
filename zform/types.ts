@@ -4,6 +4,9 @@ import { DefaultValues, SubmitHandler, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { CalendarProps } from "@/components/ui/calendar";
 import { FieldType, ParsedField, ZodObjectOrWrapped } from "./core/types";
+import { SelectProps } from "@radix-ui/react-select";
+import { CheckboxProps } from "@radix-ui/react-checkbox";
+import { SwitchProps } from "@radix-ui/react-switch";
 
 interface ZFormBaseProps<TSchema extends ZodObjectOrWrapped> {
   schema: TSchema;
@@ -31,8 +34,7 @@ type BaseFieldConfig = {
   className?: string;
 };
 
-type FieldConfig = BaseFieldConfig & {
-  item?: { className?: string; config?: FieldConfig };
+export type FieldConfig = BaseFieldConfig & {
   inputProps?: React.ComponentProps<"input">;
   typeOverride?:
     | "password"
@@ -43,6 +45,9 @@ type FieldConfig = BaseFieldConfig & {
     | "range";
   textareaProps?: React.ComponentProps<"textarea">;
   calendarProps?: CalendarProps;
+  selectProps?: SelectProps;
+  checkboxProps?: CheckboxProps;
+  switchProps?: SwitchProps;
 };
 export interface ZWrapperProps {
   type: FieldType;
@@ -55,13 +60,19 @@ export interface ZWrapperProps {
 export type ZFieldProps<T = FieldType> = {
   field: ParsedField<T>;
   path: string[];
-  config?: FieldConfig;
 };
+export type Config<T> = T extends z.ZodEffects<infer Inner>
+  ? Config<Inner>
+  : T extends z.ZodObject<infer Shape>
+  ? {
+      [K in keyof Shape]?: Config<Shape[K]> | FieldConfig;
+    }
+  : T extends z.ZodArray<infer Element>
+  ? Config<Element> | FieldConfig
+  : FieldConfig;
 
 export interface ZFormProps<TSchema extends ZodObjectOrWrapped>
   extends ZFormBaseProps<TSchema>,
     ZFormComponentsProps {
-  fieldsConfig?: {
-    [K in keyof z.infer<TSchema>]?: FieldConfig;
-  };
+  config?: Config<TSchema> | object;
 }

@@ -1,5 +1,5 @@
 "use client";
-import ZForm from "@/zform";
+import ZForm, { Config } from "@/zform";
 import { z } from "zod";
 
 enum Subject {
@@ -30,6 +30,21 @@ const contactSchema = z.object({
     .default(false)
     .refine((value) => value === true, "You must agree to proceed"),
 });
+const config: Config<typeof contactSchema> = {
+  email: {
+    className: "col-span-2",
+  },
+  message: {
+    className: "col-span-2",
+    typeOverride: "textarea",
+  },
+  consent: {
+    className: "col-span-2",
+    labelOverride: "Accept terms and conditions",
+    descriptionOverride:
+      "You agree to our Terms of Service and Privacy Policy.",
+  },
+};
 export default function ContactForm() {
   return (
     <ZForm
@@ -47,21 +62,7 @@ export default function ContactForm() {
       formProps={{
         className: "grid grid-cols-2 gap-2 items-center",
       }}
-      fieldsConfig={{
-        email: {
-          className: "col-span-2",
-        },
-        message: {
-          className: "col-span-2",
-          typeOverride: "textarea",
-        },
-        consent: {
-          className: "col-span-2",
-          labelOverride: "Accept terms and conditions",
-          descriptionOverride:
-            "You agree to our Terms of Service and Privacy Policy.",
-        },
-      }}
+      config={config}
     />
   );
 }

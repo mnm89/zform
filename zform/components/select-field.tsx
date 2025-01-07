@@ -11,6 +11,7 @@ import {
 import { ParsedField } from "../core/types";
 import { useFormField } from "@/components/ui/form";
 import { ZFieldProps } from "../types";
+import { useZField } from "../context";
 
 function useSelectField(field: ParsedField) {
   const { setValue, getValues } = useFormContext();
@@ -22,11 +23,12 @@ function useSelectField(field: ParsedField) {
   };
   return { key, required, id, name, onValueChange, value, options };
 }
-export const SelectField: React.FC<ZFieldProps> = ({ field }) => {
+export const SelectField: React.FC<ZFieldProps> = ({ field, path }) => {
   const { key, options, ...props } = useSelectField(field);
 
+  const { selectProps } = useZField(field, path);
   return (
-    <Select key={key} {...props}>
+    <Select key={key} {...props} {...selectProps}>
       <SelectTrigger>
         <SelectValue placeholder="Select an option" />
       </SelectTrigger>

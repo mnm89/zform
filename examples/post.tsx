@@ -1,4 +1,4 @@
-import ZForm from "@/zform";
+import ZForm, { Config } from "@/zform";
 import { z } from "zod";
 
 export const postFormSchema = z.object({
@@ -25,6 +25,20 @@ export const postFormSchema = z.object({
     }),
   }),
 });
+const config: Config<typeof postFormSchema> = {
+  content: {
+    className: "col-span-2",
+    typeOverride: "textarea",
+  },
+  metadata: {
+    className: "col-span-2 grid grid-cols-2 gap-2 items-center border p-1",
+    descriptionOverride: "Post metadata including the date and location",
+  },
+  tags: {
+    className: "col-span-2 grid grid-cols-4 gap-2 items-center border p-1",
+    descriptionOverride: "Post tags to help users find your post",
+  },
+};
 export default function PostForm() {
   return (
     <ZForm
@@ -41,22 +55,7 @@ export default function PostForm() {
       formProps={{
         className: "grid grid-cols-2 gap-2 items-center",
       }}
-      fieldsConfig={{
-        content: {
-          className: "col-span-2",
-          typeOverride: "textarea",
-        },
-        metadata: {
-          className:
-            "col-span-2 grid grid-cols-2 gap-2 items-center border p-1",
-          descriptionOverride: "Post metadata including the date and location",
-        },
-        tags: {
-          className:
-            "col-span-2 grid grid-cols-4 gap-2 items-center border p-1",
-          descriptionOverride: "Post tags to help users find your post",
-        },
-      }}
+      config={config}
     />
   );
 }

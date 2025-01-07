@@ -2,7 +2,7 @@
 
 import React from "react";
 import { z } from "zod";
-import ZForm from "@/zform";
+import ZForm, { Config } from "@/zform";
 
 const feedbackSchema = z.object({
   rating: z
@@ -12,6 +12,29 @@ const feedbackSchema = z.object({
   comment: z.string().max(500, "Comment is too long").optional(),
   subscribe: z.boolean().default(false),
 });
+const config: Config<typeof feedbackSchema> = {
+  rating: {
+    inputProps: {
+      min: 1,
+      max: 5,
+      step: 1,
+    },
+    typeOverride: "stepper",
+  },
+  comment: {
+    className: "col-span-2",
+    typeOverride: "textarea",
+    inputProps: {
+      placeholder: "Add a comment (optional)",
+    },
+  },
+  subscribe: {
+    className: "col-span-2",
+    labelOverride: "Subscribe to updates",
+    descriptionOverride:
+      "Get notified about responses and new feedback features.",
+  },
+};
 
 export default function FeedbackForm() {
   return (
@@ -30,29 +53,7 @@ export default function FeedbackForm() {
       formProps={{
         className: "grid grid-cols-2 gap-2 items-center",
       }}
-      fieldsConfig={{
-        rating: {
-          inputProps: {
-            min: 1,
-            max: 5,
-            step: 1,
-          },
-          typeOverride: "stepper",
-        },
-        comment: {
-          className: "col-span-2",
-          typeOverride: "textarea",
-          inputProps: {
-            placeholder: "Add a comment (optional)",
-          },
-        },
-        subscribe: {
-          className: "col-span-2",
-          labelOverride: "Subscribe to updates",
-          descriptionOverride:
-            "Get notified about responses and new feedback features.",
-        },
-      }}
+      config={config}
     />
   );
 }

@@ -13,6 +13,7 @@ import {
 import { ParsedField } from "../core/types";
 import { useFormField } from "@/components/ui/form";
 import { ZFieldProps } from "../types";
+import { useZField } from "../context";
 
 function formatDate(date: Date) {
   const year = date.getFullYear();
@@ -33,13 +34,14 @@ function useDateField(field: ParsedField) {
 
   return { key, id, onSelect, selected };
 }
-const DateField: React.FC<ZFieldProps> = ({ field, props }) => {
+const DateField: React.FC<ZFieldProps> = ({ field, path }) => {
   const popoverTriggerRef = useRef<HTMLButtonElement>(null); // Ref for the PopoverTrigger
 
+  const { calendarProps } = useZField(field, path);
   const { id, key, onSelect, selected } = useDateField(field);
 
   useEffect(() => {
-    popoverTriggerRef.current?.click();
+    if (selected) popoverTriggerRef.current?.click();
   }, [selected]);
 
   return (
@@ -59,11 +61,11 @@ const DateField: React.FC<ZFieldProps> = ({ field, props }) => {
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
-          {...props?.calendarProps}
           id={id}
-          mode="single"
           captionLayout="dropdown"
           selected={selected}
+          {...calendarProps}
+          mode="single"
           onSelect={onSelect}
         />
       </PopoverContent>

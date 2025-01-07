@@ -5,30 +5,33 @@ import { ParsedField } from "../core/types";
 import { ZField } from "../field";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, TrashIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useZField } from "../context";
 
 export const ArrayField: React.FC<{
   field: ParsedField;
   path: string[];
-  className?: string;
-  label?: string;
-  description?: string;
-}> = ({ field, path, className, description, label }) => {
+}> = ({ field, path }) => {
+  const { className, fieldLabel, fieldDescription, name } = useZField(
+    field,
+    path
+  );
   const { control, getFieldState } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: path.join("."),
+    name,
   });
 
   const defaultValue = field.schema?.[0].default;
-  const { error } = getFieldState(path.join("."));
+  const { error } = getFieldState(name);
   const errorMessage = error?.message || error?.root?.message;
 
   return (
     <fieldset className={className}>
       <legend className="p-2 flex justify-between gap-2">
         <div>
-          <p className="font-semibold ">{label} </p>
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <p className="font-semibold ">{fieldLabel} </p>
+          <p className="text-sm text-muted-foreground">{fieldDescription}</p>
           {errorMessage && (
             <p className="text-sm font-medium text-destructive">
               {errorMessage}
@@ -48,8 +51,8 @@ export const ArrayField: React.FC<{
         </Button>
       </legend>
 
-      {fields.map((item, index) => (
-        <div key={item.id} className="relative p-2">
+      {fields.map(({ id }, index) => (
+        <div key={id} className={cn("relative p-2")}>
           <Button
             onClick={() => remove(index)}
             variant="ghost"
@@ -67,4 +70,9 @@ export const ArrayField: React.FC<{
       ))}
     </fieldset>
   );
+};
+export const getArrayFieldComponent = (typeOverride?: "badges") => {
+  if (typeOverride === "badges")
+    throw new Error("Not implemented", { cause: { typeOverride } });
+  return ArrayField;
 };

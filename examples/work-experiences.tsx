@@ -1,16 +1,34 @@
-import ZForm from "@/zform";
+import ZForm, { Config } from "@/zform";
 import { z } from "zod";
 
 const WorkExperienceSchema = z.object({
-  position: z.object({
-    title: z.string({ required_error: "Position title is required" }),
-    company: z.string(),
+  role: z.object({
+    title: z.string({ required_error: "Role title is required" }),
+    company: z.string({ required_error: "Company name is required" }),
   }),
+  description: z
+    .string()
+    .min(10, "Role description must be at least 10 characters")
+    .max(2000, "Description is too long"),
 });
 
 const WorkExperiencesFormSchema = z.object({
-  job_history: z.array(WorkExperienceSchema),
+  job_history: z
+    .array(WorkExperienceSchema)
+    .min(1, "At least one work experience is needed"),
 });
+
+const config: Config<typeof WorkExperiencesFormSchema> = {
+  job_history: {
+    className: "w-full",
+    role: {
+      className: "grid grid-cols-2 gap-2",
+    },
+    description: {
+      typeOverride: "textarea",
+    },
+  },
+};
 export default function WorkExperienceForm() {
   return (
     <ZForm
@@ -29,14 +47,7 @@ export default function WorkExperienceForm() {
       formProps={{
         className: "flex flex-col items-center gap-4",
       }}
-      fieldsConfig={{
-        job_history: {
-          className: "w-full",
-          item: {
-            className: "grid grid-cols-2 gap-2",
-          },
-        },
-      }}
+      config={config}
     />
   );
 }
