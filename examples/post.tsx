@@ -54,6 +54,7 @@ export default function PostForm() {
       }}
       formProps={{
         className: "grid grid-cols-2 gap-2 items-center",
+        noValidate: true,
       }}
       config={config}
     />

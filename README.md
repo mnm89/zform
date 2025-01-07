@@ -33,7 +33,7 @@ import { ZForm } from "@zform/core";
 import { z } from "zod";
 
 const schema = z.object({
-  name: z.string().min(1, "Name is required"),
+  name: z.string({required_error: "Name is required"}),
   age: z.number().min(0, "Age must be a positive number"),
 });
 
@@ -58,7 +58,7 @@ export default function App() {
 | `schema`         | `ZodObject`                                                                               | Required   | Zod schema defining the form structure.                                                                |
 | `defaultValues`  | `DefaultValues<z.infer<TSchema>>`                                                         | `{}`       | Predefined values for form fields.                                                                     |
 | `onSubmit`       | `(data: z.infer<TSchema>) => void`                                                        | `undefined`| Callback executed when the form is successfully submitted.                                              |
-| `fieldProps`     | `{ [key: string]: { className?: string; } }`                                              | `{}`       | Custom class names for individual fields.                                                              |
+| `config`     | `{ [key: string]: { className?: string; ...} }`                                              | `{}`       | Custom class names and config for individual fields.                                                              |
 | `formProps`      | `Omit<React.ComponentProps<"form">, "onSubmit">`                                          | `{}`       | Additional props for the `<form>` element.                                                             |
 | `withSubmit`     | `boolean`                                                                                 | `false`    | Whether to include a submit button in the form.                                                        |
 | `withReset`      | `boolean`                                                                                 | `false`    | Whether to include a reset button in the form.                                                         |
@@ -74,7 +74,7 @@ import { ZForm } from "@zform/core";
 import { z } from "zod";
 
 const basicSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  username: z.string({required_error: "Username is required"}),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -99,8 +99,8 @@ import { ZForm } from "@zform/core";
 import { z } from "zod";
 
 const styledSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
+  firstName: z.string({required_error: "First name is required"}),
+  lastName: z.string({required_error: "Last name is required"}),
 });
 
 export default function StyledForm() {

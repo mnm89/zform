@@ -58,6 +58,7 @@ export default function WorkExperienceForm() {
       }}
       formProps={{
         className: "flex flex-col items-center gap-4",
+        noValidate: true,
       }}
       config={config}
     />
