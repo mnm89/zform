@@ -17,8 +17,14 @@ import { ZFieldProps } from "./types";
 import { useZField } from "./context";
 
 export const ZField: React.FC<ZFieldProps> = ({ field, path }) => {
-  const { FieldComponent, name, className, fieldLabel, fieldDescription } =
-    useZField(field, path);
+  const {
+    FieldComponent,
+    name,
+    className,
+    fieldLabel,
+    fieldDescription,
+    typeOverride,
+  } = useZField(field, path);
   const { control } = useFormContext();
 
   if (!FieldComponent)
@@ -31,7 +37,7 @@ export const ZField: React.FC<ZFieldProps> = ({ field, path }) => {
     );
   if (field.type === "array")
     return <FieldComponent field={field} path={path} />;
-  if (field.type === "object")
+  if (field.type === "object" && typeOverride !== "range")
     return <FieldComponent field={field} path={path} />;
   if (field.type === "boolean")
     return (

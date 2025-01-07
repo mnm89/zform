@@ -6,6 +6,10 @@ const WorkExperienceSchema = z.object({
     title: z.string({ required_error: "Role title is required" }),
     company: z.string({ required_error: "Company name is required" }),
   }),
+  period: z.object({
+    from: z.date(),
+    to: z.date().optional(),
+  }),
   description: z
     .string()
     .min(10, "Role description must be at least 10 characters")
@@ -28,6 +32,9 @@ const config: Config<typeof WorkExperiencesFormSchema> = {
     itemClassName: "border rounded-md",
     role: {
       className: "grid grid-cols-2 gap-2",
+    },
+    period: {
+      typeOverride: "range",
     },
     description: {
       typeOverride: "textarea",

@@ -85,7 +85,7 @@ export function useZField(field: ParsedField, path: string[]) {
       case "array":
         return getArrayFieldComponent(typeOverride as "badges");
       case "object":
-        return getObjectFieldComponent(typeOverride as "accordion");
+        return getObjectFieldComponent(typeOverride as "range");
       default:
         return null;
     }

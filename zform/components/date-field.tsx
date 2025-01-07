@@ -14,13 +14,11 @@ import { ParsedField } from "../core/types";
 import { useFormField } from "@/components/ui/form";
 import { ZFieldProps } from "../types";
 import { useZField } from "../context";
+import { format } from "date-fns";
+import { DateRange } from "react-day-picker";
 
 function formatDate(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${day}.${month}.${year}`;
+  return format(date, "LLL dd, y");
 }
 
 function useDateField(field: ParsedField) {
@@ -28,7 +26,7 @@ function useDateField(field: ParsedField) {
   const { id, name } = useFormField();
   const { key } = field;
   const selected = getValues(name);
-  const onSelect = (date: Date | undefined) => {
+  const onSelect = (date: Date | DateRange | undefined) => {
     setValue(name, date, { shouldValidate: true });
   };
 
@@ -55,8 +53,8 @@ const DateField: React.FC<ZFieldProps> = ({ field, path }) => {
           )}
           type="button"
         >
+          <CalendarIcon />
           {selected ? formatDate(selected) : <span>Pick a date</span>}
-          <CalendarIcon className="ml-auto size-4 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
@@ -72,8 +70,58 @@ const DateField: React.FC<ZFieldProps> = ({ field, path }) => {
     </Popover>
   );
 };
+
+const RangeField: React.FC<ZFieldProps> = ({ field, path }) => {
+  const popoverTriggerRef = useRef<HTMLButtonElement>(null); // Ref for the PopoverTrigger
+
+  const { calendarProps } = useZField(field, path);
+  const { id, key, onSelect, selected } = useDateField(field);
+
+  useEffect(() => {
+    if (selected) popoverTriggerRef.current?.click();
+  }, [selected]);
+
+  return (
+    <Popover key={key}>
+      <PopoverTrigger asChild ref={popoverTriggerRef}>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "w-full font-normal",
+            !selected && "text-muted-foreground"
+          )}
+          type="button"
+        >
+          <CalendarIcon />
+          {selected?.from ? (
+            selected.to ? (
+              <>
+                {formatDate(selected.from)} - {formatDate(selected.to)}
+              </>
+            ) : (
+              formatDate(selected.from)
+            )
+          ) : (
+            <span>Pick a date</span>
+          )}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          id={id}
+          captionLayout="dropdown"
+          defaultMonth={selected?.from}
+          selected={selected}
+          numberOfMonths={2}
+          {...calendarProps}
+          mode="range"
+          onSelect={onSelect}
+        />
+      </PopoverContent>
+    </Popover>
+  );
+};
 export const getDateFieldComponent = (typeOverride?: "range") => {
-  if (typeOverride === "range")
-    throw new Error("Not implemented", { cause: { typeOverride } });
+  if (typeOverride === "range") return RangeField;
   return DateField;
 };
