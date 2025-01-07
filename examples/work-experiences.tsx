@@ -13,14 +13,19 @@ const WorkExperienceSchema = z.object({
 });
 
 const WorkExperiencesFormSchema = z.object({
+  full_name: z.string({ required_error: "Your name is missing" }),
   job_history: z
     .array(WorkExperienceSchema)
     .min(1, "At least one work experience is needed"),
 });
 
 const config: Config<typeof WorkExperiencesFormSchema> = {
-  job_history: {
+  full_name: {
     className: "w-full",
+  },
+  job_history: {
+    className: "w-full flex-col gap-2 flex",
+    itemClassName: "border rounded-md",
     role: {
       className: "grid grid-cols-2 gap-2",
     },

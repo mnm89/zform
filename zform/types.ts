@@ -32,6 +32,8 @@ type BaseFieldConfig = {
   labelOverride?: string;
   descriptionOverride?: string;
   className?: string;
+  // array item
+  itemClassName?: string;
 };
 
 export type FieldConfig = BaseFieldConfig & {

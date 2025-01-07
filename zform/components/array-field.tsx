@@ -12,10 +12,8 @@ export const ArrayField: React.FC<{
   field: ParsedField;
   path: string[];
 }> = ({ field, path }) => {
-  const { className, fieldLabel, fieldDescription, name } = useZField(
-    field,
-    path
-  );
+  const { className, fieldLabel, fieldDescription, name, itemClassName } =
+    useZField(field, path);
   const { control, getFieldState } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -52,7 +50,7 @@ export const ArrayField: React.FC<{
       </legend>
 
       {fields.map(({ id }, index) => (
-        <div key={id} className={cn("relative p-2")}>
+        <div key={id} className={cn("relative p-2", itemClassName)}>
           <Button
             onClick={() => remove(index)}
             variant="ghost"
