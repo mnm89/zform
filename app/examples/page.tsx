@@ -33,7 +33,8 @@ const examples = [
   {
     name: "Work Experiences",
     path: "/examples/work-experiences",
-    description: "An array of work / job experience object with date range",
+    description:
+      "An array of work / job experience object with period object date range",
   },
 ];
 

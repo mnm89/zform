@@ -31,7 +31,7 @@ const config: Config<typeof WorkExperiencesFormSchema> = {
     className: "w-full flex-col gap-2 flex",
     itemClassName: "border rounded-md",
     role: {
-      className: "grid grid-cols-2 gap-2",
+      className: "grid grid-cols-2 gap-2 border-b",
     },
     period: {
       typeOverride: "range",
