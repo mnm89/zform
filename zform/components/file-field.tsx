@@ -20,7 +20,7 @@ export const ImagePreviewField: React.FC<ZFieldProps> = ({ field, path }) => {
   const [url, setUrl] = useState<string>();
   useEffect(() => {
     let objectUrl: string;
-    if (fileList && fileList[0]) {
+    if (fileList && fileList[0] && fileList[0] instanceof File) {
       objectUrl = URL.createObjectURL(fileList[0]);
     }
     setUrl((prev) => {
