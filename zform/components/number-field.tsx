@@ -39,7 +39,7 @@ export const NumberField: React.FC<ZFieldProps> = ({ field, path }) => {
   return <Input key={key} {...other} {...inputProps} />;
 };
 
-const StepperField: React.FC<ZFieldProps> = ({ field, path }) => {
+export const StepperField: React.FC<ZFieldProps> = ({ field, path }) => {
   const { key, id, increment, decrement, value } = useNumberField(field);
   const { inputProps } = useZField(field, path);
 
@@ -78,9 +78,4 @@ const StepperField: React.FC<ZFieldProps> = ({ field, path }) => {
       </Button>
     </div>
   );
-};
-
-export const getNumberFieldComponent = (typeOverride?: "stepper") => {
-  if (typeOverride === "stepper") return StepperField;
-  return NumberField;
 };

@@ -12,8 +12,8 @@ import { useZField } from "../context";
 function useStringField(field: ParsedField) {
   const { register } = useFormContext();
   const { id, name } = useFormField();
-  const { type, key, required } = field;
-  return { type, key, required, id, ...register(name) };
+  const { key, required } = field;
+  return { key, required, id, ...register(name) };
 }
 
 export const TextField: React.FC<ZFieldProps> = ({ field, path }) => {
@@ -71,11 +71,4 @@ export const PasswordField: React.FC<ZFieldProps> = ({ field, path }) => {
       </style>
     </div>
   );
-};
-export const getStringFieldComponent = (
-  typeOverride?: "password" | "textarea"
-) => {
-  if (typeOverride === "password") return PasswordField;
-  if (typeOverride === "textarea") return TextareaField;
-  return TextField;
 };

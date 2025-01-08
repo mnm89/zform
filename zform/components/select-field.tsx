@@ -42,8 +42,3 @@ export const SelectField: React.FC<ZFieldProps> = ({ field, path }) => {
     </Select>
   );
 };
-export const getSelectFieldComponent = (typeOverride?: "autocomplete") => {
-  if (typeOverride === "autocomplete")
-    throw new Error("Not implemented", { cause: { typeOverride } });
-  return SelectField;
-};

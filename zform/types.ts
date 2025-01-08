@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ReactNode } from "react";
+import { ComponentType, ReactNode } from "react";
 import { DefaultValues, SubmitHandler, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { CalendarProps } from "@/components/ui/calendar";
@@ -35,21 +35,23 @@ type BaseFieldConfig = {
   // array item
   itemClassName?: string;
 };
-
+export type TypeOverride =
+  | "password"
+  | "textarea"
+  | "stepper"
+  | "switch"
+  | "date-range"
+  | "file"
+  | "image-preview";
 export type FieldConfig = BaseFieldConfig & {
   inputProps?: React.ComponentProps<"input">;
-  typeOverride?:
-    | "password"
-    | "textarea"
-    | "autocomplete"
-    | "stepper"
-    | "switch"
-    | "range";
+  typeOverride?: TypeOverride;
   textareaProps?: React.ComponentProps<"textarea">;
   calendarProps?: CalendarProps;
   selectProps?: SelectProps;
   checkboxProps?: CheckboxProps;
   switchProps?: SwitchProps;
+  imagePreview?: ComponentType<{ src?: string }>;
 };
 export interface ZWrapperProps {
   type: FieldType;

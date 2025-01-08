@@ -2,7 +2,6 @@ import React from "react";
 import { ZField } from "../field";
 import { ParsedField } from "../core/types";
 import { useZField } from "../context";
-import { getDateFieldComponent } from "./date-field";
 
 export const ObjectField: React.FC<{
   field: ParsedField;
@@ -24,8 +23,4 @@ export const ObjectField: React.FC<{
       ))}
     </fieldset>
   );
-};
-export const getObjectFieldComponent = (typeOverride?: "range") => {
-  if (typeOverride === "range") return getDateFieldComponent(typeOverride);
-  return ObjectField;
 };

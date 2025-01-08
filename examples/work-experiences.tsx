@@ -1,4 +1,5 @@
 import ZForm, { Config } from "@/zform";
+import { zf } from "@/zform/core/schemas";
 import { z } from "zod";
 
 const WorkExperienceSchema = z.object({
@@ -6,9 +7,8 @@ const WorkExperienceSchema = z.object({
     title: z.string({ required_error: "Role title is required" }),
     company: z.string({ required_error: "Company name is required" }),
   }),
-  period: z.object({
-    from: z.date(),
-    to: z.date().optional(),
+  period: zf.dateRange({
+    required_error: "Please provide a start / end date",
   }),
   description: z
     .string()
@@ -34,7 +34,7 @@ const config: Config<typeof WorkExperiencesFormSchema> = {
       className: "grid grid-cols-2 gap-2 border-b",
     },
     period: {
-      typeOverride: "range",
+      typeOverride: "date-range",
     },
     description: {
       typeOverride: "textarea",

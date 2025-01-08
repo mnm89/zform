@@ -3,13 +3,7 @@ import { ParsedField, ParsedSchema, ZodObjectOrWrapped } from "./core/types";
 import { Config, FieldConfig } from "./types";
 
 import { getDescriptions, getLabel } from "./core/parser";
-import { getBooleanFieldComponent } from "./components/boolean-field";
-import { getSelectFieldComponent } from "./components/select-field";
-import { getDateFieldComponent } from "./components/date-field";
-import { getNumberFieldComponent } from "./components/number-field";
-import { getStringFieldComponent } from "./components/string-field";
-import { getArrayFieldComponent } from "./components/array-field";
-import { getObjectFieldComponent } from "./components/object-field";
+import { getFieldComponent } from "./components";
 
 export type ZContextType<
   TSchema extends ZodObjectOrWrapped = ZodObjectOrWrapped
@@ -70,27 +64,10 @@ export function useZField(field: ParsedField, path: string[]) {
     };
   }
 
-  const getFieldComponent = (typeOverride?: string) => {
-    switch (field.type) {
-      case "string":
-        return getStringFieldComponent(typeOverride as "password" | "textarea");
-      case "boolean":
-        return getBooleanFieldComponent(typeOverride as "switch");
-      case "select":
-        return getSelectFieldComponent(typeOverride as "autocomplete");
-      case "date":
-        return getDateFieldComponent(typeOverride as "range");
-      case "number":
-        return getNumberFieldComponent(typeOverride as "stepper");
-      case "array":
-        return getArrayFieldComponent(typeOverride as "badges");
-      case "object":
-        return getObjectFieldComponent(typeOverride as "range");
-      default:
-        return null;
-    }
-  };
   const fieldConfig = getFieldConfig();
-  const FieldComponent = getFieldComponent(fieldConfig.typeOverride);
+  const FieldComponent = getFieldComponent(
+    field.type,
+    fieldConfig.typeOverride
+  );
   return { name: path.join("."), FieldComponent, ...fieldConfig };
 }

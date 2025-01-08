@@ -21,7 +21,7 @@ function useBooleanField(field: ParsedField) {
   return { required, id, key, onCheckedChange, checked };
 }
 
-export const BooleanField: React.FC<ZFieldProps> = ({ field, path }) => {
+export const CheckboxField: React.FC<ZFieldProps> = ({ field, path }) => {
   const { key, ...props } = useBooleanField(field);
   const { checkboxProps } = useZField(field, path);
   return <Checkbox key={key} {...props} {...checkboxProps} />;
@@ -33,7 +33,3 @@ export const SwitchField: React.FC<ZFieldProps> = ({ field, path }) => {
   const { switchProps } = useZField(field, path);
   return <Switch key={key} {...props} {...switchProps} />;
 };
-export function getBooleanFieldComponent(typeOverride?: "switch") {
-  if (typeOverride === "switch") return SwitchField;
-  return BooleanField;
-}

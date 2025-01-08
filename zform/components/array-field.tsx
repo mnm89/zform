@@ -69,8 +69,3 @@ export const ArrayField: React.FC<{
     </fieldset>
   );
 };
-export const getArrayFieldComponent = (typeOverride?: "badges") => {
-  if (typeOverride === "badges")
-    throw new Error("Not implemented", { cause: { typeOverride } });
-  return ArrayField;
-};

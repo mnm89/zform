@@ -32,7 +32,7 @@ function useDateField(field: ParsedField) {
 
   return { key, id, onSelect, selected };
 }
-const DateField: React.FC<ZFieldProps> = ({ field, path }) => {
+export const DateField: React.FC<ZFieldProps> = ({ field, path }) => {
   const popoverTriggerRef = useRef<HTMLButtonElement>(null); // Ref for the PopoverTrigger
 
   const { calendarProps } = useZField(field, path);
@@ -71,7 +71,7 @@ const DateField: React.FC<ZFieldProps> = ({ field, path }) => {
   );
 };
 
-const RangeField: React.FC<ZFieldProps> = ({ field, path }) => {
+export const DateRangeField: React.FC<ZFieldProps> = ({ field, path }) => {
   const popoverTriggerRef = useRef<HTMLButtonElement>(null); // Ref for the PopoverTrigger
 
   const { calendarProps } = useZField(field, path);
@@ -120,8 +120,4 @@ const RangeField: React.FC<ZFieldProps> = ({ field, path }) => {
       </PopoverContent>
     </Popover>
   );
-};
-export const getDateFieldComponent = (typeOverride?: "range") => {
-  if (typeOverride === "range") return RangeField;
-  return DateField;
 };

@@ -33,6 +33,5 @@ export function inferFieldType(schema: z.ZodTypeAny) {
   if (schema instanceof z.ZodEnum) return "select";
   if (schema instanceof z.ZodNativeEnum) return "select";
   if (schema instanceof z.ZodArray) return "array";
-
-  return "string"; // Default to string for unknown types
+  return "custom"; // Default to custom for unknown types
 }

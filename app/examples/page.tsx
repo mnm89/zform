@@ -8,6 +8,12 @@ const examples = [
       "A basic sign-up form with validation. using snake_case for schema keys",
   },
   {
+    name: "Profile Form",
+    path: "/examples/profile",
+    description:
+      "A basic profile form with avatar, username and bio. using file custom schema",
+  },
+  {
     name: "Contact Form",
     path: "/examples/contact",
     description:
@@ -34,7 +40,7 @@ const examples = [
     name: "Work Experiences",
     path: "/examples/work-experiences",
     description:
-      "An array of work / job experience object with period object date range",
+      "An array of work / job experience object with a custom date range schema",
   },
 ];
 

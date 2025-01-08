@@ -31,13 +31,22 @@ export const ZField: React.FC<ZFieldProps> = ({ field, path }) => {
     return (
       <Alert variant="destructive" className="h-full">
         <AlertCircle className="size-4" />
-        <AlertTitle>Unhandled field type {field.type}</AlertTitle>
+        <AlertTitle className="flex gap-2">
+          <span>
+            Unhandled field of type <b>{field.type}</b>
+          </span>
+          {typeOverride && (
+            <span>
+              with type override <b>{typeOverride}</b>
+            </span>
+          )}
+        </AlertTitle>
         <AlertDescription> - {field.key}</AlertDescription>
       </Alert>
     );
   if (field.type === "array")
     return <FieldComponent field={field} path={path} />;
-  if (field.type === "object" && typeOverride !== "range")
+  if (field.type === "object")
     return <FieldComponent field={field} path={path} />;
   if (field.type === "boolean")
     return (
