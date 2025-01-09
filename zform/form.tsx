@@ -53,7 +53,15 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
       >
         <div className={cn("flex flex-col max-w-screen-sm gap-4", className)}>
           {header}
-          <form onSubmit={form.handleSubmit(onSubmit)} {...formProps}>
+          {form.formState.errors.root?.message && (
+            <p className="text-[0.8rem] font-medium text-destructive my-1">
+              {form.formState.errors.root.message}
+            </p>
+          )}
+          <form
+            onSubmit={form.handleSubmit((data) => onSubmit(data, form))}
+            {...formProps}
+          >
             {fields.map((field, index) => (
               <ZField
                 key={`field-${index}-${field.key}`}

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ComponentType, ReactNode } from "react";
-import { DefaultValues, SubmitHandler, UseFormReturn } from "react-hook-form";
+import { DefaultValues, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { CalendarProps } from "@/components/ui/calendar";
 import { FieldType, ParsedField, ZodObjectOrWrapped } from "./core/types";
@@ -11,7 +11,10 @@ import { SwitchProps } from "@radix-ui/react-switch";
 interface ZFormBaseProps<TSchema extends ZodObjectOrWrapped> {
   schema: TSchema;
   defaultValues?: DefaultValues<z.infer<TSchema>>;
-  onSubmit?: SubmitHandler<z.infer<TSchema>>;
+  onSubmit?: (
+    data: z.infer<TSchema>,
+    form: UseFormReturn<z.infer<TSchema>, unknown, undefined>
+  ) => void | Promise<void>;
   className?: string;
   onFormInit?: (
     form: UseFormReturn<z.infer<TSchema>, unknown, undefined>
