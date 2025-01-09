@@ -10,10 +10,12 @@ import { getDefaultValues, parseSchema } from "./core/parser";
 import { ZField } from "./field";
 import { ZFormProps } from "./types";
 import { ZodObjectOrWrapped } from "./core/types";
+import { cn } from "@/lib/utils";
 
 export function ZForm<TSchema extends ZodObjectOrWrapped>({
   schema: inputSchema,
   defaultValues,
+  className,
   children,
   onSubmit = () => {},
   withSubmit = false,
@@ -49,7 +51,7 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
           config,
         }}
       >
-        <div className="flex flex-col gap-4 max-w-screen-sm w-full">
+        <div className={cn("flex flex-col max-w-screen-sm gap-4", className)}>
           {header}
           <form onSubmit={form.handleSubmit(onSubmit)} {...formProps}>
             {fields.map((field, index) => (

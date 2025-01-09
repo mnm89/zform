@@ -12,6 +12,7 @@ interface ZFormBaseProps<TSchema extends ZodObjectOrWrapped> {
   schema: TSchema;
   defaultValues?: DefaultValues<z.infer<TSchema>>;
   onSubmit?: SubmitHandler<z.infer<TSchema>>;
+  className?: string;
   onFormInit?: (
     form: UseFormReturn<z.infer<TSchema>, unknown, undefined>
   ) => void;
