@@ -12,7 +12,7 @@ export const dateRange = (config?: { required_error?: string }) =>
   z
     .custom<DateRange>(
       (value) => rangeObject.safeParse(value).success,
-      config?.required_error || "Required"
+      config?.required_error || "Invalid range object"
     )
     .refine(({ from, to }) => {
       if (to && to.getTime() <= from.getTime()) return false;

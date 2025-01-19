@@ -10,6 +10,7 @@ import { ObjectField } from "./object-field";
 import { CheckboxField, SwitchField } from "./boolean-field";
 import { CustomField } from "./custom-field";
 import { ImagePreviewField } from "./file-field";
+import { CountryField } from "./country-field";
 
 type KeyType = TypeOverride | "default";
 
@@ -47,6 +48,7 @@ const TYPE_COMPONENTS_MAP: Record<
     default: CustomField,
     "date-range": DateRangeField,
     "image-preview": ImagePreviewField,
+    "country-select": CountryField,
   },
 };
 

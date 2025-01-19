@@ -1,5 +1,5 @@
 import ZForm, { Config } from "@/zform";
-import { zf } from "@/zform/core/schemas";
+import { zf } from "@/zform/custom";
 import { z } from "zod";
 
 const WorkExperienceSchema = z.object({

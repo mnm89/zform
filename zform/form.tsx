@@ -85,7 +85,7 @@ export function ZForm<TSchema extends ZodObjectOrWrapped>({
             )}
             {withSubmit && (
               <Button type="submit" {...submitProps}>
-                Submit
+                {submitProps.children || "Submit"}
               </Button>
             )}
           </form>

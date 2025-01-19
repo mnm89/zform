@@ -15,6 +15,8 @@ const SHADCN_COMPONENTS = [
   "switch",
   "textarea",
 ];
+
+const EXTERNAL_DEPENDENCIES = ["libphonenumber-js", "world-countries"];
 const main = () => {
   const name = "zform";
   const zformDir = path.join(process.cwd(), "zform");
@@ -42,6 +44,7 @@ const main = () => {
     type: "registry:block",
     registryDependencies: SHADCN_COMPONENTS,
     files,
+    dependencies: EXTERNAL_DEPENDENCIES,
   };
 
   fs.writeFileSync(
