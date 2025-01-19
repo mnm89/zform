@@ -1,10 +1,12 @@
-import { useFormField } from "@/components/ui/form";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+
+import { useFormField } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+
+import { useZField } from "../context";
 import { ParsedField } from "../core/types";
 import { ZFieldProps } from "../types";
-import { useZField } from "../context";
-import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
 
 function useFileField(field: ParsedField) {
   const { register, getValues } = useFormContext<Record<string, FileList>>();
@@ -14,13 +16,30 @@ function useFileField(field: ParsedField) {
   return { type, key, required, id, ...register(name), fileList };
 }
 
+const ImagePreview: React.FC<{ src?: string }> = ({ src }) => {
+  return (
+    <div
+      className="size-64 bg-gray-200 rounded-lg border border-gray-300 bg-no-repeat bg-contain bg-center flex items-center justify-center"
+      style={{
+        backgroundImage: src ? `url(${src})` : "none",
+      }}
+    >
+      {!src && (
+        <span className="text-center text-gray-500">
+          Select an image to preview
+        </span>
+      )}
+    </div>
+  );
+};
+
 export const ImagePreviewField: React.FC<ZFieldProps> = ({ field, path }) => {
   const { key, fileList, ...other } = useFileField(field);
   const { imagePreview, inputProps } = useZField(field, path);
   const [url, setUrl] = useState<string>();
   useEffect(() => {
     let objectUrl: string;
-    if (fileList && fileList[0]) {
+    if (fileList && fileList[0] && fileList[0] instanceof File) {
       objectUrl = URL.createObjectURL(fileList[0]);
     }
     setUrl((prev) => {
@@ -32,18 +51,10 @@ export const ImagePreviewField: React.FC<ZFieldProps> = ({ field, path }) => {
     };
   }, [fileList]);
 
-  const Preview = imagePreview
-    ? imagePreview
-    : ({ src }: { src?: string }) => (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          alt="Preview Image"
-          src={src}
-          className="w-full max-w-[280px] max-h-[160px] object-contain"
-        />
-      );
+  const Preview = imagePreview ? imagePreview : ImagePreview;
   return (
-    <div className="grid grid-cols-2 items-center justify-center gap-4">
+    <div className="flex flex-col items-center justify-center gap-4">
+      <Preview src={url} />
       <Input
         key={key}
         {...other}
@@ -51,7 +62,6 @@ export const ImagePreviewField: React.FC<ZFieldProps> = ({ field, path }) => {
         accept="image/*"
         type="file"
       />
-      <Preview src={url} />
     </div>
   );
 };
