@@ -1,7 +1,7 @@
 import React from "react";
-import { ZField } from "../field";
-import { ParsedField } from "../core/types";
-import { useZField } from "../context";
+import { ZField } from "../../field";
+import { ParsedField } from "../../core/types";
+import { useZField } from "../../context";
 
 export const ObjectField: React.FC<{
   field: ParsedField;

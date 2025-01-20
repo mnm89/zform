@@ -64,7 +64,11 @@ function DateRange() {
       <ZForm
         className="w-full"
         schema={z.object({ date_range: zf.dateRange() })}
-        config={{ date_range: { typeOverride: "date-range" } }}
+        config={{
+          date_range: {
+            typeOverride: "date-range",
+          },
+        }}
         onSubmit={(data) => alert(JSON.stringify(data.date_range, null, 2))}
         withSubmit
         submitProps={{ children: "Validate", size: "sm" }}

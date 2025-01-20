@@ -5,7 +5,7 @@ const SHADCN_COMPONENTS = [
   "alert",
   "badge",
   "button",
-  "calendar",
+  "command",
   "checkbox",
   "form",
   "input",
@@ -16,7 +16,12 @@ const SHADCN_COMPONENTS = [
   "textarea",
 ];
 
-const EXTERNAL_DEPENDENCIES = ["libphonenumber-js", "world-countries"];
+const EXTERNAL_DEPENDENCIES = [
+  "libphonenumber-js@1",
+  "date-fns@3",
+  "world-countries@5",
+  "react-day-picker@9",
+];
 const main = () => {
   const name = "zform";
   const zformDir = path.join(process.cwd(), "zform");

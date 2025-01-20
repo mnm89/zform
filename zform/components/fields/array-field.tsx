@@ -1,12 +1,12 @@
 import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import { ParsedField } from "../core/types";
-import { ZField } from "../field";
+import { ParsedField } from "../../core/types";
+import { ZField } from "../../field";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useZField } from "../context";
+import { useZField } from "../../context";
 
 export const ArrayField: React.FC<{
   field: ParsedField;

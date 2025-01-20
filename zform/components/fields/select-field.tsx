@@ -8,10 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ParsedField } from "../core/types";
+import { ParsedField } from "../../core/types";
 import { useFormField } from "@/components/ui/form";
-import { ZFieldProps } from "../types";
-import { useZField } from "../context";
+import { ZFieldProps } from "../../types";
+import { useZField } from "../../context";
 
 function useSelectField(field: ParsedField) {
   const { setValue, getValues } = useFormContext();

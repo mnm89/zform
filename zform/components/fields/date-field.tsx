@@ -4,18 +4,18 @@ import { useFormContext } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ParsedField } from "../core/types";
+import { ParsedField } from "../../core/types";
 import { useFormField } from "@/components/ui/form";
-import { ZFieldProps } from "../types";
-import { useZField } from "../context";
+import { ZFieldProps } from "../../types";
+import { useZField } from "../../context";
 import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
+import { Calendar } from "../calendar";
 
 function formatDate(date: Date) {
   return format(date, "LLL dd, y");
@@ -61,8 +61,8 @@ export const DateField: React.FC<ZFieldProps> = ({ field, path }) => {
         <Calendar
           id={id}
           captionLayout="dropdown"
-          selected={selected}
           {...calendarProps}
+          selected={selected}
           mode="single"
           onSelect={onSelect}
         />
@@ -110,10 +110,10 @@ export const DateRangeField: React.FC<ZFieldProps> = ({ field, path }) => {
         <Calendar
           id={id}
           captionLayout="dropdown"
+          {...calendarProps}
           defaultMonth={selected?.from}
           selected={selected}
           numberOfMonths={2}
-          {...calendarProps}
           mode="range"
           onSelect={onSelect}
         />

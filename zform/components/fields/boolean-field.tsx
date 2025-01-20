@@ -3,10 +3,10 @@ import { useFormContext } from "react-hook-form";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
-import { ParsedField } from "../core/types";
+import { ParsedField } from "../../core/types";
 import { useFormField } from "@/components/ui/form";
-import { ZFieldProps } from "../types";
-import { useZField } from "../context";
+import { ZFieldProps } from "../../types";
+import { useZField } from "../../context";
 
 function useBooleanField(field: ParsedField) {
   const { setValue, getValues } = useFormContext();

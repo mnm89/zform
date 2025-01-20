@@ -1,13 +1,13 @@
 import React from "react";
 import { useFormField } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import { ParsedField } from "../core/types";
+import { ParsedField } from "../../core/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { ZFieldProps } from "../types";
-import { useZField } from "../context";
+import { ZFieldProps } from "../../types";
+import { useZField } from "../../context";
 
 function useStringField(field: ParsedField) {
   const { register } = useFormContext();

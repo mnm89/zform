@@ -3,7 +3,7 @@ import { ParsedField, ParsedSchema, ZodObjectOrWrapped } from "./core/types";
 import { Config, FieldConfig } from "./types";
 
 import { getDescriptions, getLabel } from "./core/parser";
-import { getFieldComponent } from "./components";
+import { getFieldComponent } from "./components/fields";
 
 export type ZContextType<
   TSchema extends ZodObjectOrWrapped = ZodObjectOrWrapped

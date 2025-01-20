@@ -4,9 +4,9 @@ import { useFormContext } from "react-hook-form";
 import { useFormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { useZField } from "../context";
-import { ParsedField } from "../core/types";
-import { ZFieldProps } from "../types";
+import { useZField } from "../../context";
+import { ParsedField } from "../../core/types";
+import { ZFieldProps } from "../../types";
 
 function useFileField(field: ParsedField) {
   const { register, getValues } = useFormContext<Record<string, FileList>>();

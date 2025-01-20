@@ -1,13 +1,13 @@
 import React from "react";
 import { useFormField } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import { ParsedField } from "../core/types";
+import { ParsedField } from "../../core/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Minus, Plus } from "lucide-react";
-import { ZFieldProps } from "../types";
-import { useZField } from "../context";
+import { ZFieldProps } from "../../types";
+import { useZField } from "../../context";
 
 function useNumberField(field: ParsedField) {
   const { register, setValue, getValues } = useFormContext();

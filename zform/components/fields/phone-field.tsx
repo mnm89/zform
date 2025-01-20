@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
-import { useZField } from "../context";
-import { ZFieldProps } from "../types";
+import { useZField } from "../../context";
+import { ZFieldProps } from "../../types";
 import { cn } from "@/lib/utils";
 import {
   Popover,
@@ -21,10 +21,10 @@ import { CheckIcon, Globe } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { ChangeEventHandler, useRef, useState } from "react";
 import { useFormField } from "@/components/ui/form";
-import { PhoneNumber } from "../custom/phone-number";
-import { usePhone } from "../hooks/use-phone";
+import { PhoneNumber } from "../../custom/phone-number";
+import { usePhone } from "../../hooks/use-phone";
 import { parseDigits } from "libphonenumber-js";
-import { useCountries } from "../hooks/use-countries";
+import { useCountries } from "../../hooks/use-countries";
 
 export const PhoneField: React.FC<ZFieldProps> = ({ field, path }) => {
   const { inputProps } = useZField(field, path);

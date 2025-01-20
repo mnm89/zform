@@ -19,8 +19,8 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useFormField } from "@/components/ui/form";
-import { ZFieldProps } from "../types";
-import { useCountries } from "../hooks/use-countries";
+import { ZFieldProps } from "../../types";
+import { useCountries } from "../../hooks/use-countries";
 
 export const CountryField: React.FC<ZFieldProps> = () => {
   const { setValue, getValues } = useFormContext();

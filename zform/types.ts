@@ -2,11 +2,11 @@ import { Button } from "@/components/ui/button";
 import { ComponentType, ReactNode } from "react";
 import { DefaultValues, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { CalendarProps } from "@/components/ui/calendar";
 import { FieldType, ParsedField, ZodObjectOrWrapped } from "./core/types";
 import { SelectProps } from "@radix-ui/react-select";
 import { CheckboxProps } from "@radix-ui/react-checkbox";
 import { SwitchProps } from "@radix-ui/react-switch";
+import { CalendarProps } from "./components/calendar";
 
 interface ZFormBaseProps<TSchema extends ZodObjectOrWrapped> {
   schema: TSchema;

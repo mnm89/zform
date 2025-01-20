@@ -1,9 +1,9 @@
 import { ComponentType } from "react";
-import { TypeOverride, ZFieldProps } from "../types";
+import { TypeOverride, ZFieldProps } from "../../types";
 import { NumberField, StepperField } from "./number-field";
 import { PasswordField, TextareaField, TextField } from "./string-field";
 import { SelectField } from "./select-field";
-import { FieldType } from "../core/types";
+import { FieldType } from "../../core/types";
 import { DateField, DateRangeField } from "./date-field";
 import { ArrayField } from "./array-field";
 import { ObjectField } from "./object-field";

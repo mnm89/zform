@@ -1,8 +1,8 @@
 import { useFormField } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import { useZField } from "../context";
-import { ParsedField } from "../core/types";
-import { ZFieldProps } from "../types";
+import { useZField } from "../../context";
+import { ParsedField } from "../../core/types";
+import { ZFieldProps } from "../../types";
 import { Input } from "@/components/ui/input";
 
 function useCustomField(field: ParsedField) {
