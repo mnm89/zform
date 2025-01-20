@@ -29,7 +29,13 @@ export const CountryField: React.FC<ZFieldProps> = () => {
   const { countries, getCountry } = useCountries();
   const value = getValues(name);
   const handleChange = (code: string) => {
-    setValue(name, getCountry(code), { shouldValidate: true });
+    const country = getCountry(code);
+    console.log({ country });
+    setValue(
+      name,
+      { countryCode: country?.countryCode, countryName: country?.countryName },
+      { shouldValidate: true }
+    );
     popoverTriggerRef.current?.click(); // Programmatically close the popover
   };
   return (
@@ -46,7 +52,9 @@ export const CountryField: React.FC<ZFieldProps> = () => {
           {value ? (
             <span
               className="mr-2 h-4 w-6 bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: `url(${value.flag})` }}
+              style={{
+                backgroundImage: `url(${getCountry(value.countryCode)?.flag})`,
+              }}
             />
           ) : (
             <Globe className="mr-2 size-4 opacity-50" />

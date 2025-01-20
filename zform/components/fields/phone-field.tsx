@@ -117,8 +117,8 @@ export const PhoneField: React.FC<ZFieldProps> = ({ field, path }) => {
                       "gap-2",
                       value?.phoneCode === phoneCode && "bg-muted"
                     )}
-                    value={getCountryName(countryCode)}
-                    onSelect={() => handleSelect(countryCode)}
+                    value={countryCode}
+                    onSelect={handleSelect}
                   >
                     <span
                       className="h-4 w-6 bg-cover bg-center bg-no-repeat"
