@@ -2,7 +2,9 @@
 
 ## Overview
 
-`ZForm` is a dynamic form generation library that utilizes `Zod` schemas to automatically create and manage forms. Built on `react-hook-form`, it allows for extensive customization of form fields, layouts, and behaviors.
+`ZForm` is a dynamic form generation library based on shadcn components that utilizes `Zod` schemas to automatically create and manage forms. Built on `react-hook-form`, it allows for extensive customization of form fields, layouts, and behaviors
+
+[View Demo](https://mnm-zform.vercel.app/)
 
 ### Key Features
 
@@ -16,10 +18,10 @@
 
 ## Installation
 
-To get started, install `@zform/core` along with its dependencies:
+Using shadcn CLI:
 
 ```bash
-npm install @zform/core zod react-hook-form @hookform/resolvers
+npx shadcn add https://raw.githubusercontent.com/mnm89/zform/refs/heads/main/setup.json
 ```
 
 ---
@@ -53,17 +55,41 @@ export default function App() {
 
 ## Props
 
-| Prop             | Type                                                                                       | Default    | Description                                                                                             |
-|------------------|--------------------------------------------------------------------------------------------|------------|---------------------------------------------------------------------------------------------------------|
-| `schema`         | `ZodObject`                                                                               | Required   | Zod schema defining the form structure.                                                                |
-| `defaultValues`  | `DefaultValues<z.infer<TSchema>>`                                                         | `{}`       | Predefined values for form fields.                                                                     |
-| `onSubmit`       | `(data: z.infer<TSchema>) => void`                                                        | `undefined`| Callback executed when the form is successfully submitted.                                              |
-| `config`     | `{ [key: string]: { className?: string; ...} }`                                              | `{}`       | Custom class names and config for individual fields.                                                              |
-| `formProps`      | `Omit<React.ComponentProps<"form">, "onSubmit">`                                          | `{}`       | Additional props for the `<form>` element.                                                             |
-| `withSubmit`     | `boolean`                                                                                 | `false`    | Whether to include a submit button in the form.                                                        |
-| `withReset`      | `boolean`                                                                                 | `false`    | Whether to include a reset button in the form.                                                         |
+```ts
+// types.ts
 
----
+interface ZFormBaseProps<TSchema extends ZodObjectOrWrapped> {
+  schema: TSchema;
+  defaultValues?: DefaultValues<z.infer<TSchema>>;
+  onSubmit?: (
+    data: z.infer<TSchema>,
+    form: UseFormReturn<z.infer<TSchema>, unknown, undefined>
+  ) => void | Promise<void>;
+  className?: string;
+  onFormInit?: (
+    form: UseFormReturn<z.infer<TSchema>, unknown, undefined>
+  ) => void;
+}
+
+interface ZFormComponentsProps {
+  formProps?: Omit<React.ComponentProps<"form">, "onSubmit">;
+  submitProps?: Omit<React.ComponentProps<typeof Button>, "type" | "asChild">;
+  resetProps?: Omit<React.ComponentProps<typeof Button>, "type" | "asChild">;
+  children?: ReactNode;
+  header?: ReactNode;
+  footer?: ReactNode;
+  withSubmit?: boolean;
+  withReset?: boolean;
+}
+
+...
+
+export interface ZFormProps<TSchema extends ZodObjectOrWrapped>
+  extends ZFormBaseProps<TSchema>,
+    ZFormComponentsProps {
+  config?: Config<TSchema> | object;
+}
+```
 
 ## Examples
 
@@ -107,7 +133,7 @@ export default function StyledForm() {
   return (
     <ZForm
       schema={styledSchema}
-      fieldProps={{
+      config={{
         firstName: { className: "bg-gray-200 p-2 rounded" },
         lastName: { className: "bg-blue-200 p-2 rounded" },
       }}
@@ -120,46 +146,19 @@ export default function StyledForm() {
 }
 ```
 
----
-
-### Example: Dynamic Fields
-
-```tsx
-import { ZForm } from "@zform/core";
-import { z } from "zod";
-
-const dynamicSchema = z.object({
-  email: z.string().email("Invalid email"),
-  agreeToTerms: z.boolean().refine((val) => val, "You must agree to terms"),
-});
-
-export default function DynamicForm() {
-  return (
-    <ZForm
-      schema={dynamicSchema}
-      defaultValues={{ email: "", agreeToTerms: false }}
-      withSubmit
-      onSubmit={(data) => console.log(data)}
-    />
-  );
-}
-```
-
----
-
 ## FAQ
 
 ### How do I add custom components?
 
-Integrate custom components for specific fields by customizing the `fieldProps` or extending the `ZForm` component.
+Todo
 
 ### How do I handle async validations?
 
-Use Zod’s `.superRefine` method to handle complex, async validations.
+Todo
 
 ### How do I style the form?
 
-Provide custom class names via `fieldProps` and `formProps` for individual fields and the entire form.
+Provide custom class names via `className` for the zform main wrapper, `formProps.className` for the actual form and `config.<field name>.className` for individual fields.
 
 ---
 
@@ -174,4 +173,4 @@ We welcome contributions! Feel free to:
 
 ## Demo
 
-Explore live demos and examples on [CodeSandbox](https://codesandbox.io/) or a hosted site (link to be added).
+Explore live demos and examples on [View Demo](https://mnm-zform.vercel.app/examples).

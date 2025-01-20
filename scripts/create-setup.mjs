@@ -39,9 +39,7 @@ const main = () => {
           "utf-8"
         ),
         type: "registry:block",
-        target: `~/components/zform${file.parentPath.replace(zformDir, "")}/${
-          file.name
-        }`,
+        target: `~/zform${file.parentPath.replace(zformDir, "")}/${file.name}`,
       };
     });
   const output = {
