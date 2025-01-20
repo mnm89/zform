@@ -21,16 +21,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useFormField } from "@/components/ui/form";
 import { ZFieldProps } from "../types";
 import { useCountries } from "../hooks/use-countries";
-import { CountryCode } from "libphonenumber-js";
-import type { Country } from "../custom/country-select";
 
 export const CountryField: React.FC<ZFieldProps> = () => {
   const { setValue, getValues } = useFormContext();
   const popoverTriggerRef = useRef<HTMLButtonElement>(null); // Ref for the PopoverTrigger
   const { name } = useFormField();
   const { countries, getCountry } = useCountries();
-  const value = getValues(name) as Country;
-  const handleChange = (code: CountryCode) => {
+  const value = getValues(name);
+  const handleChange = (code: string) => {
     setValue(name, getCountry(code), { shouldValidate: true });
     popoverTriggerRef.current?.click(); // Programmatically close the popover
   };
@@ -75,7 +73,7 @@ export const CountryField: React.FC<ZFieldProps> = () => {
                       value?.countryCode === countryCode && "bg-muted"
                     )}
                     value={countryCode}
-                    onSelect={() => handleChange(countryCode)}
+                    onSelect={handleChange}
                   >
                     <span className="flex h-4 w-6 justify-center overflow-hidden">
                       {emoji}

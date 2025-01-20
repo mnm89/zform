@@ -8,7 +8,7 @@ export interface Country {
 }
 const countryObject = z.object({
   countryCode: z.string(),
-  countryName: z.string().optional(),
+  countryName: z.string(),
   countryCallingCode: z.string(),
   flag: z.string().url(),
 });

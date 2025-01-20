@@ -47,7 +47,8 @@ export type TypeOverride =
   | "date-range"
   | "file"
   | "image-preview"
-  | "country-select";
+  | "country-select"
+  | "phone-number";
 export type FieldConfig = BaseFieldConfig & {
   inputProps?: React.ComponentProps<"input">;
   typeOverride?: TypeOverride;

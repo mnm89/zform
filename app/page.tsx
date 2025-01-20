@@ -3,7 +3,7 @@ import CustomFields from "./_custom-fields";
 
 export default function Home() {
   return (
-    <main>
+    <main className="flex flex-col gap-4">
       <div className="bg-gray-50 flex flex-col items-center justify-center py-4">
         <h1 className="text-4xl font-bold text-center mb-6">ZForm Demo</h1>
         <p className="text-lg text-center mb-10 max-w-xl">
