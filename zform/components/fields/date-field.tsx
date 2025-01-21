@@ -1,20 +1,21 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { DateRange } from "react-day-picker";
 import { useFormContext } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useFormField } from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ParsedField } from "../../core/types";
-import { useFormField } from "@/components/ui/form";
-import { ZFieldProps } from "../../types";
+
 import { useZField } from "../../context";
-import { format } from "date-fns";
-import { DateRange } from "react-day-picker";
+import { ParsedField } from "../../core/types";
+import { ZFieldProps } from "../../types";
 import { Calendar } from "../calendar";
 
 function formatDate(date: Date) {
@@ -33,18 +34,19 @@ function useDateField(field: ParsedField) {
   return { key, id, onSelect, selected };
 }
 export const DateField: React.FC<ZFieldProps> = ({ field, path }) => {
-  const popoverTriggerRef = useRef<HTMLButtonElement>(null); // Ref for the PopoverTrigger
+  const [isOpen, setIsOpen] = useState(false);
 
   const { calendarProps } = useZField(field, path);
   const { id, key, onSelect, selected } = useDateField(field);
 
   useEffect(() => {
-    if (selected) popoverTriggerRef.current?.click();
+    if (selected && isOpen) setIsOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
   return (
-    <Popover key={key}>
-      <PopoverTrigger asChild ref={popoverTriggerRef}>
+    <Popover key={key} open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(
@@ -72,18 +74,19 @@ export const DateField: React.FC<ZFieldProps> = ({ field, path }) => {
 };
 
 export const DateRangeField: React.FC<ZFieldProps> = ({ field, path }) => {
-  const popoverTriggerRef = useRef<HTMLButtonElement>(null); // Ref for the PopoverTrigger
+  const [isOpen, setIsOpen] = useState(false);
 
   const { calendarProps } = useZField(field, path);
   const { id, key, onSelect, selected } = useDateField(field);
 
   useEffect(() => {
-    if (selected) popoverTriggerRef.current?.click();
+    if (selected && isOpen) setIsOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
   return (
-    <Popover key={key}>
-      <PopoverTrigger asChild ref={popoverTriggerRef}>
+    <Popover key={key} open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(

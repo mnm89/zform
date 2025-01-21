@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { CheckIcon, Globe } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 
@@ -12,25 +12,58 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { useFormField } from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useFormField } from "@/components/ui/form";
-import { ZFieldProps } from "../../types";
+
+import { Country } from "../../custom/country-select";
 import { useCountries } from "../../hooks/use-countries";
+import { ZFieldProps } from "../../types";
+
+function CountryFlag({ countryCode }: { countryCode?: string }) {
+  const { getCountry } = useCountries();
+  const flag = countryCode && getCountry(countryCode)?.flag;
+  if (flag)
+    return (
+      <span
+        className="mr-2 h-4 w-6 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: `url(${flag})`,
+        }}
+      />
+    );
+  return <Globe className="mr-2 size-4 opacity-50" />;
+}
 
 export const CountryField: React.FC<ZFieldProps> = () => {
   const { setValue, getValues } = useFormContext();
   const popoverTriggerRef = useRef<HTMLButtonElement>(null); // Ref for the PopoverTrigger
   const { name } = useFormField();
   const { countries, getCountry } = useCountries();
-  const value = getValues(name);
+  const value = getValues(name) as Country;
+
+  useEffect(() => {
+    if (value.countryName) {
+      const country = countries.find(
+        (c) => c.countryName === value.countryName
+      );
+      setValue(
+        name,
+        {
+          countryCode: country?.countryCode,
+          countryName: country?.countryName,
+        },
+        { shouldValidate: true }
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const handleChange = (code: string) => {
     const country = getCountry(code);
-    console.log({ country });
     setValue(
       name,
       { countryCode: country?.countryCode, countryName: country?.countryName },
@@ -49,16 +82,7 @@ export const CountryField: React.FC<ZFieldProps> = () => {
           )}
           type="button"
         >
-          {value ? (
-            <span
-              className="mr-2 h-4 w-6 bg-cover bg-center bg-no-repeat"
-              style={{
-                backgroundImage: `url(${getCountry(value.countryCode)?.flag})`,
-              }}
-            />
-          ) : (
-            <Globe className="mr-2 size-4 opacity-50" />
-          )}
+          <CountryFlag countryCode={value?.countryCode} />
           {value ? (
             <span className="mr-auto">{value.countryName}</span>
           ) : (
@@ -80,8 +104,8 @@ export const CountryField: React.FC<ZFieldProps> = () => {
                       "gap-2",
                       value?.countryCode === countryCode && "bg-muted"
                     )}
-                    value={countryCode}
-                    onSelect={handleChange}
+                    value={countryName}
+                    onSelect={() => handleChange(countryCode)}
                   >
                     <span className="flex h-4 w-6 justify-center overflow-hidden">
                       {emoji}

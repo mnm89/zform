@@ -1,12 +1,9 @@
-import { Input } from "@/components/ui/input";
-import { useZField } from "../../context";
-import { ZFieldProps } from "../../types";
+import { ChangeEventHandler, useEffect, useRef, useState } from "react";
+import { parseDigits } from "libphonenumber-js";
+import { CheckIcon, Globe } from "lucide-react";
+import { useFormContext } from "react-hook-form";
+
 import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -16,15 +13,20 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { CheckIcon, Globe } from "lucide-react";
-import { useFormContext } from "react-hook-form";
-import { ChangeEventHandler, useRef, useState } from "react";
 import { useFormField } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+import { useZField } from "../../context";
 import { PhoneNumber } from "../../custom/phone-number";
-import { usePhone } from "../../hooks/use-phone";
-import { parseDigits } from "libphonenumber-js";
 import { useCountries } from "../../hooks/use-countries";
+import { usePhone } from "../../hooks/use-phone";
+import { ZFieldProps } from "../../types";
 
 export const PhoneField: React.FC<ZFieldProps> = ({ field, path }) => {
   const { inputProps } = useZField(field, path);
@@ -36,6 +38,14 @@ export const PhoneField: React.FC<ZFieldProps> = ({ field, path }) => {
   const [selectedCountry, selectCountry] =
     useState<(typeof countries)[number]>();
   const value = getValues(name) as PhoneNumber;
+
+  useEffect(() => {
+    if (value.formatted) {
+      const country = countries.find((c) => c.phoneCode === value.phoneCode);
+      selectCountry(country);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const handleSelect = (code: string) => {
     const country = countries.find((c) => c.countryCode === code);
     selectCountry(country);

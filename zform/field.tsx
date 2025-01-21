@@ -1,6 +1,9 @@
 import React from "react";
+import { AlertCircle } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 
+import { cn } from "@/lib/utils";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   FormControl,
   FormDescription,
@@ -10,11 +13,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { ZFieldProps } from "./types";
 import { useZField } from "./context";
+import { ZFieldProps } from "./types";
 
 export const ZField: React.FC<ZFieldProps> = ({ field, path }) => {
   const {
@@ -56,7 +56,7 @@ export const ZField: React.FC<ZFieldProps> = ({ field, path }) => {
         render={() => (
           <FormItem
             className={cn(
-              "flex flex-row justify-start space-x-3 space-y-0",
+              "flex flex-row items-center justify-start space-x-3 space-y-0",
               className
             )}
           >

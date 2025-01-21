@@ -1,4 +1,8 @@
-import { CountryCode, AsYouType } from "libphonenumber-js";
+import {
+  AsYouType,
+  CountryCode,
+  parsePhoneNumberFromString,
+} from "libphonenumber-js";
 import metadata from "libphonenumber-js/metadata.min.json";
 
 export function usePhone() {
@@ -15,5 +19,9 @@ export function usePhone() {
 
   const typing = new AsYouType();
 
-  return { countries, typing };
+  function parse(value: string) {
+    return parsePhoneNumberFromString(value);
+  }
+
+  return { countries, typing, parse };
 }
