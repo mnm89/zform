@@ -40,7 +40,7 @@ export const PhoneField: React.FC<ZFieldProps> = ({ field, path }) => {
   const value = getValues(name) as PhoneNumber;
 
   useEffect(() => {
-    if (value.formatted) {
+    if (value?.formatted) {
       const country = countries.find((c) => c.phoneCode === value.phoneCode);
       selectCountry(country);
     }

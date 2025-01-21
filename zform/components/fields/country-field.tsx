@@ -47,7 +47,7 @@ export const CountryField: React.FC<ZFieldProps> = () => {
   const value = getValues(name) as Country;
 
   useEffect(() => {
-    if (value.countryName) {
+    if (value?.countryName) {
       const country = countries.find(
         (c) => c.countryName === value.countryName
       );

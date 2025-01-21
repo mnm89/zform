@@ -22,12 +22,12 @@ function formatDate(date: Date) {
   return format(date, "LLL dd, y");
 }
 
-function useDateField(field: ParsedField) {
+function useDateField<T = Date>(field: ParsedField) {
   const { setValue, getValues } = useFormContext();
   const { id, name } = useFormField();
   const { key } = field;
-  const selected = getValues(name);
-  const onSelect = (date: Date | DateRange | undefined) => {
+  const selected = getValues(name) as T;
+  const onSelect = (date: T | undefined) => {
     setValue(name, date, { shouldValidate: true });
   };
 
@@ -77,10 +77,18 @@ export const DateRangeField: React.FC<ZFieldProps> = ({ field, path }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { calendarProps } = useZField(field, path);
-  const { id, key, onSelect, selected } = useDateField(field);
+  const { id, key, onSelect, selected } = useDateField<DateRange>(field);
 
   useEffect(() => {
-    if (selected && isOpen) setIsOpen(false);
+    if (
+      selected &&
+      selected.from &&
+      selected.to &&
+      selected.from.getTime() < selected.to.getTime() &&
+      isOpen
+    ) {
+      setIsOpen(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected]);
 
