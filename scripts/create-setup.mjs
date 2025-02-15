@@ -14,6 +14,7 @@ const SHADCN_COMPONENTS = [
   "select",
   "switch",
   "textarea",
+  "scroll-area"
 ];
 
 const EXTERNAL_DEPENDENCIES = [
